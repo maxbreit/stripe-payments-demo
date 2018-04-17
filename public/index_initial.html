@@ -1,16 +1,23 @@
 <html>
 
 <head>
-	<title>Doodance checkout</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" type="text/css" href="/stylesheets/store.css">
-	<link rel="icon" type="image/png" sizes="104x80" href="/images/logo.png">
+  <title>Stripe Payments Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/stylesheets/store.css">
+  <link rel="icon" type="image/png" sizes="104x80" href="/images/logo.png">
 </head>
 
 <body>
   <div id="main" class="loading">
+    <header>
+      <a class="shop" href="/">Stripe Payments Demo</a>
+      <a class="github" href="https://github.com/stripe/stripe-payments-demo">View on GitHub</a>
+    </header>
     <div id="checkout">
+      <div id="payment-request">
+        <div id="payment-request-button"></div>
+      </div>
       <form id="payment-form" method="POST" action="/orders">
         <p class="instruction">Complete your shipping and payment details below</p>
         <section>
@@ -42,7 +49,7 @@
             </label>
             <label class="select">
               <span>Country</span>
-              <div id="country" class="field DE">
+              <div id="country" class="field US">
                 <select name="country">
                   <option value="AU">Australia</option>
                   <option value="AT">Austria</option>
@@ -83,10 +90,6 @@
               <li>
                 <input type="radio" name="payment" id="payment-card" value="card" checked>
                 <label for="payment-card">Card</label>
-              </li>
-              <li>
-                <input type="radio" name="payment" id="payment-ach_credit_transfer" value="ach_credit_transfer" checked>
-                <label for="payment-ach_credit_transfer">Bank Transfer</label>
               </li>
               <li>
                 <input type="radio" name="payment" id="payment-alipay" value="alipay">
@@ -179,7 +182,39 @@
       <div class="status error">
         <h1>Oops, payment failed.</h1>
         <p>It looks like your order could not be paid at this time. Please try again or select a different payment option.</p>
-        <p class="error-message"></p>
+      </div>
+    </div>
+  </div>
+  <div id="summary">
+    <header>
+      <h1>Order Summary</h1>
+    </header>
+    <div id="order-items"></div>
+    <div id="order-total">
+      <div class="line-item subtotal">
+        <p class="label">Subtotal</p>
+        <p class="price" data-subtotal></p>
+      </div>
+      <div class="line-item shipping">
+        <p class="label">Shipping</p>
+        <p class="price">Free</p>
+      </div>
+      <div class="line-item demo">
+        <div id="demo">
+          <p class="label">Demo in test mode</p>
+          <p class="note">This app is running in test mode. You will
+            <em>not</em> be charged.</p>
+          <p class="note"> Feel free to test payments using a real card or any
+            <a href="https://stripe.com/docs/testing#cards" target="_blank">Stripe test card</a>. Non-card payments will redirect to test pages.
+          </p>
+          <p class="note">Run this app locally in live mode with your Stripe account to create real payments and see redirects to banking
+            sites.
+          </p>
+        </div>
+      </div>
+      <div class="line-item total">
+        <p class="label">Total</p>
+        <p class="price" data-total></p>
       </div>
     </div>
   </div>
