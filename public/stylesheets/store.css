@@ -34,7 +34,7 @@ body {
 }
 
 #main.checkout:not(.success):not(.error) {
-  width: calc(100% - 450px);
+  /*width: calc(100% - 450px);*/
 }
 
 /* Header */
