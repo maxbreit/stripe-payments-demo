@@ -12,7 +12,8 @@ class Store {
   constructor() {
     this.lineItems = [];
     this.products = {};
-    this.displayOrderSummary();
+    //TODO figure out how to retrieve the product to be payed
+    // this.displayOrderSummary();
   }
 
   // Compute the total for the order based on the line items (SKUs and quantity).
