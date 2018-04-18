@@ -18,6 +18,7 @@ class Store {
 
   // Compute the total for the order based on the line items (SKUs and quantity).
   getOrderTotal() {
+    console.log('getting order total...');
     return Object.values(this.lineItems).reduce(
       (total, {product, sku, quantity}) =>
         total + quantity * this.products[product].skus.data[0].price,
@@ -27,6 +28,7 @@ class Store {
 
   // Expose the line items for the order (in a way that is friendly to the Stripe Orders API).
   getOrderItems() {
+    console.log('getting order items...');
     let items = [];
     this.lineItems.forEach(item =>
       items.push({
@@ -35,6 +37,7 @@ class Store {
         quantity: item.quantity,
       })
     );
+    console.log('got items:', items);
     return items;
   }
 
@@ -55,14 +58,26 @@ class Store {
 
   // Load the product details.
   async loadProducts() {
+    console.log('loading products...');
     const productsResponse = await fetch('/products');
     const products = (await productsResponse.json()).data;
     products.forEach(product => (this.products[product.id] = product));
+      console.log('products', this.products);
+      let test_product = products[1];
+      let sku = test_product.skus.data[0];
+
+      this.lineItems.push({
+          product: test_product.id,
+          sku: sku.id,
+          quantity: 1,
+      });
   }
 
   // Create an order object to represent the line items.
   async createOrder(currency, items, email, shipping) {
+    console.log('creating order...');
     try {
+      console.log('request body', currency, items, email, shipping);
       const response = await fetch('/orders', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -74,6 +89,7 @@ class Store {
         }),
       });
       const data = await response.json();
+      console.log('got response after creating order', data);
       if (data.error) {
         return {error: data.error};
       } else {

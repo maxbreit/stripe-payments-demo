@@ -119,6 +119,7 @@
   // Submit handler for our payment form.
   form.addEventListener('submit', async event => {
     event.preventDefault();
+    console.log('submitting form...')
 
     // Retrieve the user information from the form.
     const payment = form.querySelector('input[name=payment]:checked').value;
@@ -136,6 +137,7 @@
         country,
       },
     };
+    console.log('shipping', shipping)
     // Disable the Pay button to prevent multiple click events.
     submitButton.disabled = true;
 
@@ -146,6 +148,9 @@
       email,
       shipping
     );
+
+    console.log('created order', order);
+    console.log('shipping', shipping)
 
     if (payment === 'card') {
       // Create a Stripe source from the card information and the owner name.
@@ -198,17 +203,21 @@
 
   // Handle the order and source activation if required
   const handleOrder = async (order, source) => {
-    const mainElement = document.getElementById('main');
+  console.log('handling order', order, source);
+  const mainElement = document.getElementById('main');
     const confirmationElement = document.getElementById('confirmation');
     switch (order.metadata.status) {
       case 'created':
+          console.log('order created...')
         switch (source.status) {
           case 'chargeable':
+              console.log('case chargeable...')
             submitButton.textContent = 'Processing Payment…';
             const response = await store.payOrder(order, source);
             await handleOrder(response.order, response.source);
             break;
           case 'pending':
+              console.log('case pending...')
             switch (source.flow) {
               case 'none':
                 // Normally, sources with a `flow` value of `none` are chargeable right away,
@@ -287,6 +296,8 @@
             }
             break;
           case 'failed':
+              console.log('case failed...');
+              break;
           case 'canceled':
             // Authentication failed, offer to select another payment method.
             break;
@@ -297,6 +308,7 @@
         break;
 
       case 'pending':
+          console.log('order pending...')
         // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
@@ -306,6 +318,7 @@
         break;
 
       case 'failed':
+          console.log('order failed')
         // Payment for the order has failed.
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
@@ -314,6 +327,7 @@
         break;
 
       case 'paid':
+          console.log('order paid!')
         // Success! Payment is confirmed. Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         mainElement.classList.remove('receiver');
@@ -433,6 +447,7 @@
 
   // Update the main button to reflect the payment method being selected.
   const updateButtonLabel = paymentMethod => {
+      console.log('updating button label with payment method', paymentMethod);
     let amount = store.formatPrice(store.getOrderTotal(), config.currency);
     let name = paymentMethods[paymentMethod].name;
     let label = `Pay ${amount}`;
