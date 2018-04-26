@@ -204,7 +204,7 @@
   // Handle the order and source activation if required
   const handleOrder = async (order, source) => {
   console.log('handling order', order, source);
-  const mainElement = document.getElementById('main');
+  const mainElement = document.getElementById('ddsco-main');
     const confirmationElement = document.getElementById('confirmation');
     switch (order.metadata.status) {
       case 'created':
@@ -373,7 +373,7 @@
   };
 
   const orderId = store.getActiveOrderId();
-  const mainElement = document.getElementById('main');
+  const mainElement = document.getElementById('ddsco-main');
   if (orderId && window.location.search.includes('source')) {
     // Update the interface to display the processing screen.
     mainElement.classList.add('success', 'processing');
