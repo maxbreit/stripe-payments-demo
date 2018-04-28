@@ -13,36 +13,36 @@
     <div id="checkout">
       <form id="payment-form" method="POST" action="/orders">
         <p class="instruction">Complete your shipping and payment details below</p>
-        <section>
-          <h2>Shipping &amp; Billing Information</h2>
-          <fieldset class="with-state">
+        <section class="sct-customer-data">
+          <h2 class="ddsco-h2">Shipping &amp; Billing Information</h2>
+          <fieldset class="ddsco-fieldset with-state">
             <label>
               <span>Name</span>
-              <input name="name" class="field" placeholder="Jenny Rosen" required>
+              <input name="name" class="ddsco-input ddsco-field" placeholder="Jenny Rosen" required>
             </label>
             <label>
               <span>Email</span>
-              <input name="email" type="email" class="field" placeholder="jenny@example.com" required>
+              <input name="email" type="email" class="ddsco-input ddsco-field" placeholder="jenny@example.com" required>
             </label>
             <label>
               <span>Address</span>
-              <input name="address" class="field" placeholder="185 Berry Street Suite 550">
+              <input name="address" class="ddsco-input ddsco-field" placeholder="185 Berry Street Suite 550">
             </label>
             <label>
               <span>City</span>
-              <input name="city" class="field" placeholder="San Francisco">
+              <input name="city" class="ddsco-input ddsco-field" placeholder="San Francisco">
             </label>
             <label class="state">
               <span>State</span>
-              <input name="state" class="field" placeholder="CA">
+              <input name="state" class="ddsco-input ddsco-field" placeholder="CA">
             </label>
             <label class="zip">
               <span>ZIP</span>
-              <input name="postal_code" class="field" placeholder="94107">
+              <input name="postal_code" class="ddsco-input ddsco-field" placeholder="94107">
             </label>
             <label class="select">
               <span>Country</span>
-              <div id="country" class="field DE">
+              <div id="country" class="ddsco-field DE">
                 <select name="country">
                   <option value="AU">Australia</option>
                   <option value="AT">Austria</option>
@@ -76,69 +76,65 @@
           </fieldset>
           <p class="tip">Select another country to see different payment options.</p>
         </section>
-        <section>
-          <h2>Payment Information</h2>
+        <section class="sct-payment-method">
+          <h2 class="ddsco-h2">Payment Information</h2>
           <nav id="payment-methods">
             <ul>
               <li>
-                <input type="radio" name="payment" id="payment-card" value="card" checked>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-card" value="card" checked>
                 <label for="payment-card">Card</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-ach_credit_transfer" value="ach_credit_transfer" checked>
-                <label for="payment-ach_credit_transfer">Bank Transfer</label>
-              </li>
-              <li>
-                <input type="radio" name="payment" id="payment-alipay" value="alipay">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-alipay" value="alipay">
                 <label for="payment-alipay">Alipay</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-bancontact" value="bancontact">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-bancontact" value="bancontact">
                 <label for="payment-bancontact">Bancontact</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-eps" value="eps">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-eps" value="eps">
                 <label for="payment-eps">EPS</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-ideal" value="ideal">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-ideal" value="ideal">
                 <label for="payment-ideal">iDEAL</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-giropay" value="giropay">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-giropay" value="giropay">
                 <label for="payment-giropay">Giropay</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-multibanco" value="multibanco">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-multibanco" value="multibanco">
                 <label for="payment-multibanco">Multibanco</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-sepa_debit" value="sepa_debit">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-sepa_debit" value="sepa_debit">
                 <label for="payment-sepa_debit">SEPA Direct Debit</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-sofort" value="sofort">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-sofort" value="sofort">
                 <label for="payment-sofort">SOFORT</label>
               </li>
               <li>
-                <input type="radio" name="payment" id="payment-wechat" value="wechat">
+                <input class="ddsco-input" type="radio" name="payment" id="payment-wechat" value="wechat">
                 <label for="payment-wechat">WeChat Pay</label>
               </li>
             </ul>
           </nav>
           <div class="payment-info card visible">
-            <fieldset>
-              <label>
+            <fieldset class="ddsco-fieldset">
+              <label class="ddsco-fieldset-label">
                 <span>Card</span>
-                <div id="card-element" class="field"></div>
+                <div id="card-element" class="ddsco-field"></div>
               </label>
             </fieldset>
           </div>
           <div class="payment-info sepa_debit">
-            <fieldset>
-              <label>
+            <fieldset class="ddsco-fieldset">
+              <label class="ddsco-fieldset-label">
                 <span>IBAN</span>
-                <input name="iban" class="field" placeholder="FR14 2004 1010 0505 0001 3M02 606" />
+                <input name="iban" class="ddsco-input ddsco-field" placeholder="FR14 2004 1010 0505 0001 3M02 606" />
               </label>
             </fieldset>
             <p class="notice">By providing your IBAN and confirming this payment, you’re authorizing Payments Demo and Stripe, our payment
@@ -162,24 +158,23 @@
     </div>
     <div id="confirmation">
       <div class="status processing">
-        <h1>Completing your order…</h1>
+        <h1 class="ddsco-h1">Completing your order…</h1>
         <p>We’re just waiting for the confirmation from your bank… This might take a moment but feel free to close this page.</p>
         <p>We’ll send your receipt via email shortly.</p>
       </div>
       <div class="status success">
-        <h1>Thanks for your order!</h1>
+        <h1 class="ddsco-h1">Thanks for your order!</h1>
         <p>Woot! You successfully made a payment with Stripe.</p>
         <p class="note">We just sent your receipt to your email address, and your items will be on their way shortly.</p>
       </div>
       <div class="status receiver">
-        <h1>Thanks! One last step!</h1>
+        <h1 class="ddsco-h1">Thanks! One last step!</h1>
         <p>Please make a payment using the details below to complete your order.</p>
         <div class="info"></div>
       </div>
       <div class="status error">
-        <h1>Oops, payment failed.</h1>
+        <h1 class="ddsco-h1">Oops, payment failed.</h1>
         <p>It looks like your order could not be paid at this time. Please try again or select a different payment option.</p>
-        <p class="error-message"></p>
       </div>
     </div>
   </div>

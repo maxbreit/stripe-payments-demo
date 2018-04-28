@@ -112,7 +112,7 @@
         country === 'US'
           ? 'ZIP'
           : country === 'UK' ? 'Postcode' : 'Postal Code';
-      event.target.parentElement.className = `field ${country}`;
+      event.target.parentElement.className = `ddsco-field ${country}`;
       showRelevantPaymentMethods(country);
     });
 
@@ -527,7 +527,7 @@
   const countrySelector = document.getElementById('country');
   countrySelector.querySelector(`option[value=${config.country}]`).selected =
     'selected';
-  countrySelector.className = `field ${config.country}`;
+  countrySelector.className = `ddsco-field ${config.country}`;
 
   // Trigger the method to show relevant payment methods on page load.
   showRelevantPaymentMethods();

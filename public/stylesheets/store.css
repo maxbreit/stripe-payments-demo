@@ -17,12 +17,12 @@
   color: #525f7f;
 }
 
-body {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  background: #f8fbfd;
-}
+/*body {*/
+  /*display: flex;*/
+  /*flex-direction: row;*/
+  /*align-items: center;*/
+  /*background: #f8fbfd;*/
+/*}*/
 
 /* Overall Container */
 
@@ -31,7 +31,23 @@ body {
   height: 100vh;
   text-align: center;
   transition: width 0.3s ease-in-out;
+  background: #f8fbfd;
 }
+
+#ddsco-main* {
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: none;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+  Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+  font-size: 15px;
+  line-height: 1.4em;
+  color: #525f7f;
+}
+
 
 #ddsco-main.checkout:not(.success):not(.error) {
   /*width: calc(100% - 450px);*/
@@ -39,35 +55,35 @@ body {
 
 /* Header */
 
-header {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  width: 100%;
-  height: 80px;
-  background: #fff url(/images/logo.svg) center center no-repeat;
-  border-bottom: 1px solid #f3f3ff;
-}
+/*header {*/
+  /*display: flex;*/
+  /*flex-direction: row;*/
+  /*justify-content: space-between;*/
+  /*width: 100%;*/
+  /*height: 80px;*/
+  /*background: #fff url(/images/logo.svg) center center no-repeat;*/
+  /*border-bottom: 1px solid #f3f3ff;*/
+/*}*/
 
-header a.shop,
-header a.github {
-  margin: 30px;
-  font-size: 13px;
-  font-weight: 500;
-  color: #666ee8;
-  letter-spacing: 0.3px;
-  text-transform: uppercase;
-  text-decoration: none;
-}
+/*header a.shop,*/
+/*header a.github {*/
+  /*margin: 30px;*/
+  /*font-size: 13px;*/
+  /*font-weight: 500;*/
+  /*color: #666ee8;*/
+  /*letter-spacing: 0.3px;*/
+  /*text-transform: uppercase;*/
+  /*text-decoration: none;*/
+/*}*/
 
-header a.github {
-  padding-left: 20px;
-  background: url(/images/github.svg) left center no-repeat;
-}
+/*header a.github {*/
+  /*padding-left: 20px;*/
+  /*background: url(/images/github.svg) left center no-repeat;*/
+/*}*/
 
-header a:hover {
-  text-decoration: underline;
-}
+/*header a:hover {*/
+  /*text-decoration: underline;*/
+/*}*/
 
 /* Checkout */
 
@@ -85,20 +101,20 @@ header a:hover {
   opacity: 1;
 }
 
-section {
+section.sct-customer-data, section.sct-payment-method {
   display: flex;
   flex-direction: column;
   position: relative;
   text-align: left;
 }
 
-h1 {
+h1.ddsco-h1 {
   margin: 0 0 20px 0;
   font-size: 20px;
   font-weight: 500;
 }
 
-h2 {
+h2.ddsco-h2 {
   margin: 15px 0;
   color: #32325d;
   text-transform: uppercase;
@@ -131,7 +147,7 @@ h2 {
 
 /* Form */
 
-fieldset {
+fieldset.ddsco-fieldset {
   margin-bottom: 20px;
   background: #fff;
   box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15),
@@ -142,7 +158,7 @@ fieldset {
   font-size: 0;
 }
 
-fieldset label {
+fieldset.ddsco-fieldset label {
   position: relative;
   display: flex;
   flex-direction: row;
@@ -154,36 +170,36 @@ fieldset label {
   font-weight: 400;
 }
 
-fieldset label:not(:last-child) {
+fieldset.ddsco-fieldset label:not(:last-child) {
   border-bottom: 1px solid #f0f5fa;
 }
 
-fieldset label.state {
+fieldset.ddsco-fieldset label.state {
   display: inline-flex;
   width: 75%;
 }
 
-fieldset:not(.with-state) label.state {
+fieldset.ddsco-fieldset:not(.with-state) label.state {
   display: none;
 }
 
-fieldset label.zip {
+fieldset.ddsco-fieldset label.zip {
   display: inline-flex;
   width: 25%;
   padding-right: 60px;
 }
 
-fieldset:not(.with-state) label.zip {
+fieldset.ddsco-fieldset:not(.with-state) label.zip {
   width: 100%;
 }
 
-fieldset label span {
+fieldset.ddsco-fieldset label span {
   min-width: 125px;
   padding: 0 15px;
   text-align: right;
 }
 
-fieldset .redirect label span {
+fieldset.ddsco-fieldset .redirect label span {
   width: 100%;
   text-align: center;
 }
@@ -203,7 +219,7 @@ p.tip {
   background: url(/images/tip.svg) left center no-repeat;
 }
 
-.field {
+.ddsco-field {
   flex: 1;
   padding: 0 15px;
   background: transparent;
@@ -213,17 +229,17 @@ p.tip {
   cursor: text;
 }
 
-.field::-webkit-input-placeholder {
+.ddsco-field::-webkit-input-placeholder {
   color: #aab7c4;
 }
-.field::-moz-placeholder {
+.ddsco-field::-moz-placeholder {
   color: #aab7c4;
 }
-.field:-ms-input-placeholder {
+.ddsco-field:-ms-input-placeholder {
   color: #aab7c4;
 }
 
-fieldset .select::after {
+fieldset.ddsco-fieldset .select::after {
   content: '';
   position: absolute;
   width: 9px;
@@ -235,7 +251,7 @@ fieldset .select::after {
   pointer-events: none;
 }
 
-input {
+input.ddsco-input {
   flex: 1;
   border-style: none;
   outline: none;
