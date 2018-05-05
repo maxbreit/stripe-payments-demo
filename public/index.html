@@ -156,11 +156,11 @@
             <p class="notice">Click the button below to generate a QR code for WeChat.</p>
           </div>
           <div class="payment-info paypal">
-            <p class="notice">You’ll be redirected to the PayPal site to complete your payment.</p>
-            <div id="paypal-button-container" style="visibility: hidden"></div>
+            <p class="notice">You’ll complete your payment on the PayPal site.</p>
           </div>
         </section>
-        <button type="submit">Pay</button>
+        <div id="paypal-button-container" style="display: none"></div>
+        <button id="ddsco-submit-btn" type="submit">Pay</button>
       </form>
       <div id="card-errors" class="payment-errors"></div>
     </div>
