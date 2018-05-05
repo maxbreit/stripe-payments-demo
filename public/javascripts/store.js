@@ -12,11 +12,31 @@ class Store {
   constructor() {
     this.lineItems = [];
     this.products = {};
-    this.urlPrefix = 'https://ee527d68.ngrok.io';
-    //TODO figure out how to retrieve the product to be payed
-    // this.displayOrderSummary();
+    this.urlPrefix = 'https://6f3baab9.ngrok.io';
   }
 
+  // Add the item with the specified name to the list of line items
+  addItemToList(name) {
+    if (!this.products) return;
+    if (!this.products[name]) throw `${name} is not a known product!`;
+    let product = this.products[name];
+    let sku = product.skus.data[0];
+    this.lineItems.push({
+        product: product.name,
+        sku: sku.id,
+        quantity: 1,
+    });
+  }
+  // Remove the item with the specified name from the list of line items
+  removeItemFromList(name) {
+    if (!this.products[name]) throw `${name} is not a known product!`;
+    let product = this.products[name];
+    this.lineItems = this.lineItems.filter(i => i.product !== product.name);
+  }
+
+  flushItemList() {
+    this.lineItems = [];
+  }
   // Compute the total for the order based on the line items (SKUs and quantity).
   getOrderTotal() {
     console.log('getting order total...');
@@ -60,26 +80,16 @@ class Store {
 
   // Load the product details.
   async loadProducts() {
-    console.log('loading products...');
     const productsResponse = await fetch(`${this.urlPrefix}/products`, {mode: 'cors'}); // {mode: 'cors'}
     const products = (await productsResponse.json()).data;
-    products.forEach(product => (this.products[product.id] = product));
-      console.log('products', this.products);
-      let test_product = products[1];
-      let sku = test_product.skus.data[0];
-
-      this.lineItems.push({
-          product: test_product.id,
-          sku: sku.id,
-          quantity: 1,
-      });
+    products.forEach(product => this.products[product.name] = product);
   }
 
   // Create an order object to represent the line items.
   async createOrder(currency, items, email, shipping) {
     console.log('creating order...');
     try {
-      console.log('request body', currency, items, email, shipping);
+      console.log('request body', currency, items, email);
       const response = await fetch(`${this.urlPrefix}/orders`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
@@ -87,7 +97,6 @@ class Store {
           currency,
           items,
           email,
-          shipping,
         }),
       });
       const data = await response.json();
@@ -153,51 +162,6 @@ class Store {
   // Get the active order ID from the local storage.
   getActiveOrderId() {
     return localStorage.getItem('orderId');
-  }
-
-  // Manipulate the DOM to display the order summary on the right panel.
-  // Note: For simplicity, we're just using template strings to inject data in the DOM,
-  // but in production you would typically use a library like React to manage this effectively.
-  async displayOrderSummary() {
-    // Fetch the products from the store to get all the details (name, price, etc.).
-    await this.loadProducts();
-    const orderItems = document.getElementById('order-items');
-    const orderTotal = document.getElementById('order-total');
-    let currency;
-    // Build and append the line items to the order summary.
-    for (let [id, product] of Object.entries(this.products)) {
-      const randomQuantity = (min, max) => {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-      };
-      const quantity = randomQuantity(1, 3);
-      let sku = product.skus.data[0];
-      let skuPrice = this.formatPrice(sku.price, sku.currency);
-      let lineItemPrice = this.formatPrice(sku.price * quantity, sku.currency);
-      let lineItem = document.createElement('div');
-      lineItem.classList.add('line-item');
-      lineItem.innerHTML = `
-        <img class="image" src="/images/products/${product.id}.png">
-        <div class="label">
-          <p class="product">${product.name}</p>
-          <p class="sku">${Object.values(sku.attributes).join(' ')}</p>
-        </div>
-        <p class="count">${quantity} x ${skuPrice}</p>
-        <p class="price">${lineItemPrice}</p>`;
-      orderItems.appendChild(lineItem);
-      currency = sku.currency;
-      this.lineItems.push({
-        product: product.id,
-        sku: sku.id,
-        quantity,
-      });
-    }
-    // Add the subtotal and total to the order summary.
-    const total = this.formatPrice(this.getOrderTotal(), currency);
-    orderTotal.querySelector('[data-subtotal]').innerText = total;
-    orderTotal.querySelector('[data-total]').innerText = total;
-    document.getElementById('ddsco-main').classList.remove('loading');
   }
 }
 

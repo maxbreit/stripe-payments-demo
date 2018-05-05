@@ -14,7 +14,10 @@
   'use strict';
 
   // Retrieve the configuration for the store.
-  const config = await store.getConfig();
+  // const config = await store.getConfig();
+  // const config = require('../config');
+
+  let amount = 0;
 
   // Create references to the main form and its submit button.
   const form = document.getElementById('payment-form');
@@ -25,7 +28,8 @@
    */
 
   // Create a Stripe client.
-  const stripe = Stripe(config.stripePublishableKey);
+  // const stripe = Stripe(config.stripePublishableKey);
+  const stripe = Stripe('pk_test_CiXf29IdSdWEmeZGORUfnSFc');
 
   // Create an instance of Elements.
   const elements = stripe.elements();
@@ -85,6 +89,80 @@
    * of the page to let users pay in just a click (or a tap on mobile).
    */
 
+    /**
+     * Implement a PayPal Checkout button.
+     *
+     */
+    paypal.Button.render({
+
+        env: 'sandbox', // sandbox | production
+        locale: 'en_US',
+
+        // PayPal Client IDs - replace with your own
+        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+        client: {
+            sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            production: '<insert production client id>'
+        },
+        style: {
+          label: 'paypal',
+          size: 'responsive',    // small | medium | large | responsive
+          shape: 'rect',     // pill | rect
+          color: 'blue',     // gold | blue | silver | black
+          tagline: false
+        },
+
+        // Show the buyer a 'Pay Now' button in the checkout flow
+        commit: true,
+
+        // payment() is called when the button is clicked
+        payment: function (data, actions) {
+            if (!amount) return;
+            console.log('Payment with PayPal of', amount/100);
+            // Make a call to the REST api to create the payment
+            return actions.payment.create({
+                payment: {
+                    transactions: [
+                        {
+                            amount: {total: amount / 100, currency: 'EUR'}
+                        }
+                    ]
+                }
+            });
+        },
+
+        // onAuthorize() is called when the buyer approves the payment
+        onAuthorize: function (data, actions) {
+            console.log('buyer approved the payment');
+            // Make a call to the REST api to execute the payment
+            return actions.payment.execute().then(function () {
+                window.alert('Payment Complete!');
+            });
+        },
+        // called if the buyer cancels the payment
+        // By default, the buyer is returned to the original page,
+        // but you're free to use this function to take them to a different page.
+        onCancel: function (data, actions) {
+            /*
+             * Buyer cancelled the payment
+             */
+            console.log('Buyer cancelled the payment')
+        },
+        // called when an error occurs
+        // You can allow the buyer to re-try or show an error message
+        onError: function (err) {
+            /*
+             * An error occurred during the transaction
+             */
+            console.log('An error occurred during the transaction')
+        },
+        // called for every click on the PayPal button
+        onClick: function () {
+          console.log('PayPal button clicked');
+        }
+
+    }, '#paypal-button-container');
+
   // Make sure all data is loaded from the store to compute the order amount.
   await store.loadProducts();
 
@@ -127,30 +205,28 @@
     const country = form.querySelector('select[name=country] option:checked')
       .value;
     const email = form.querySelector('input[name=email]').value;
-    const shipping = {
-      name,
-      address: {
-        line1: form.querySelector('input[name=address]').value,
-        city: form.querySelector('input[name=city]').value,
-        postal_code: form.querySelector('input[name=postal_code]').value,
-        state: form.querySelector('input[name=state]').value,
-        country,
-      },
-    };
-    console.log('shipping', shipping)
+    // const shipping = {
+    //   name,
+    //   address: {
+    //     line1: form.querySelector('input[name=address]').value,
+    //     city: form.querySelector('input[name=city]').value,
+    //     postal_code: form.querySelector('input[name=postal_code]').value,
+    //     state: form.querySelector('input[name=state]').value,
+    //     country,
+    //   },
+    // };
     // Disable the Pay button to prevent multiple click events.
     submitButton.disabled = true;
 
     // Create the order using the email and shipping information from the form.
     const order = await store.createOrder(
-      config.currency,
+      'eur',
       store.getOrderItems(),
-      email,
-      shipping
+      email
     );
 
     console.log('created order', order);
-    console.log('shipping', shipping)
+    console.log('payment', payment);
 
     if (payment === 'card') {
       // Create a Stripe source from the card information and the owner name.
@@ -237,7 +313,7 @@
                     'none';
                   let amount = store.formatPrice(
                     store.getOrderTotal(),
-                    config.currency
+                    'eur'
                   );
                   submitButton.textContent = `Scan this QR code on WeChat to pay ${amount}`;
                   // Start polling the order status.
@@ -264,7 +340,7 @@
                   // Display the Multibanco payment information to the user.
                   let amount = store.formatPrice(
                     source.amount,
-                    config.currency
+                    'eur'
                   );
                   receiverInfo.innerHTML = `
                     <ul>
@@ -443,34 +519,47 @@
       flow: 'none',
       countries: ['CN', 'HK', 'SG', 'JP'],
     },
+    paypal: {
+      name: 'PayPal',
+      flow: 'paypal'
+    }
   };
 
   // Update the main button to reflect the payment method being selected.
-  const updateButtonLabel = paymentMethod => {
-      console.log('updating button label with payment method', paymentMethod);
-    let amount = store.formatPrice(store.getOrderTotal(), config.currency);
-    let name = paymentMethods[paymentMethod].name;
-    let label = `Pay ${amount}`;
-    if (paymentMethod !== 'card') {
-      label = `Pay ${amount} with ${name}`;
-    }
-    if (paymentMethod === 'wechat') {
-      label = `Generate QR code to pay ${amount} with ${name}`;
-    }
-    submitButton.innerText = label;
-  };
+    const updateButtonLabel = paymentMethod => {
+        if (paymentMethod === 'paypal') {
+            submitButton.style.display = 'none';
+            document.getElementById('paypal-button-container')
+                .style.display = 'initial';
+        } else {
+            let amount = store.formatPrice(store.getOrderTotal(), 'eur');
+            let name = paymentMethods[paymentMethod].name;
+            let label = `Pay ${amount}`;
+            if (paymentMethod !== 'card') {
+                label = `Pay ${amount} with ${name}`;
+            }
+            if (paymentMethod === 'wechat') {
+                label = `Generate QR code to pay ${amount} with ${name}`;
+            }
+            submitButton.innerText = label;
+            document.getElementById('paypal-button-container')
+                .style.display = 'none';
+            submitButton.style.display = 'initial';
+        }
+    };
 
   // Show only the payment methods that are relevant to the selected country.
   const showRelevantPaymentMethods = country => {
     if (!country) {
       country = form.querySelector('select[name=country] option:checked').value;
     }
+
     const paymentInputs = form.querySelectorAll('input[name=payment]');
     for (let i = 0; i < paymentInputs.length; i++) {
       let input = paymentInputs[i];
       input.parentElement.classList.toggle(
         'visible',
-        input.value === 'card' ||
+        input.value === 'paypal' || input.value === 'card' ||
           paymentMethods[input.value].countries.includes(country)
       );
     }
@@ -484,7 +573,8 @@
 
     // Check the first payment option again.
     paymentInputs[0].checked = 'checked';
-    form.querySelector('.payment-info.card').classList.add('visible');
+    form.querySelector('.payment-info.paypal').classList.add('visible');
+    form.querySelector('.payment-info.card').classList.remove('visible');
     form.querySelector('.payment-info.sepa_debit').classList.remove('visible');
     form.querySelector('.payment-info.wechat').classList.remove('visible');
     form.querySelector('.payment-info.redirect').classList.remove('visible');
@@ -517,6 +607,9 @@
       form
         .querySelector('.payment-info.receiver')
         .classList.toggle('visible', flow === 'receiver');
+      form
+        .querySelector('.payment-info.paypal')
+        .classList.toggle('visible', flow === 'paypal');
       document
         .getElementById('card-errors')
         .classList.remove('visible', payment !== 'card');
@@ -525,9 +618,39 @@
 
   // Select the default country from the config on page load.
   const countrySelector = document.getElementById('country');
-  countrySelector.querySelector(`option[value=${config.country}]`).selected =
+  countrySelector.querySelector(`option[value=${'DE'}]`).selected =
     'selected';
-  countrySelector.className = `ddsco-field ${config.country}`;
+  countrySelector.className = `ddsco-field ${'DE'}`;
+  // Create a map of the button ids and course names
+  const courseIdNameMap = new Map();
+  courseIdNameMap.set('pay-ww', 'Wiener Walzer');
+  courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
+  courseIdNameMap.set('pay-df', 'Discofox');
+  // Create references to payment trigger buttons
+  const btnWw = document.getElementById('pay-ww');
+  const btnLw = document.getElementById('pay-lw');
+  const btnDf = document.getElementById('pay-df');
+  // Listen to clicks on payment trigger buttons and update the item in the order accordingly
+  const inputPaymentValue = (btnEvent) => {
+    let courseName = courseIdNameMap.get(btnEvent.target.id);
+    console.log('User wants to pay for...', courseName);
+    store.flushItemList();
+    store.addItemToList(courseName);
+    amount = store.getOrderTotal();
+
+    const paymentInputs = form.querySelectorAll('input[name=payment]');
+    for (let i = 0; i < paymentInputs.length; i++) {
+        let input = paymentInputs[i];
+        if (input.checked) {
+          updateButtonLabel(input.value);
+          break;
+        }
+    }
+  };
+
+  if (btnDf) btnDf.onclick = inputPaymentValue;
+  if (btnLw) btnLw.onclick = inputPaymentValue;
+  if (btnWw) btnWw.onclick = inputPaymentValue;
 
   // Trigger the method to show relevant payment methods on page load.
   showRelevantPaymentMethods();

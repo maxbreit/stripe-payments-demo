@@ -10,7 +10,6 @@
 'use strict';
 
 const config = require('../config');
-const setup = require('./setup');
 const {orders, products} = require('./orders');
 const express = require('express');
 const router = express.Router();
@@ -271,20 +270,14 @@ router.get('/orders/:id', async (req, res) => {
 
 // Retrieve all products.
 router.get('/products', async (req, res) => {
+  console.log('got req in /products');
   const productList = await products.list();
-  // Check if products exist on Stripe Account.
-  if (products.exist(productList)) {
-    res.json(productList);
-  } else {
-    // We need to set up the products.
-    await setup.run();
-    res.json(await products.list());
-  }
+  res.json(productList);
 });
 
 // Retrieve a product by ID.
 router.get('/products/:id', async (req, res) => {
-  res.json(await products.retrieve(req.params.id));
+    res.json(await products.retrieve(req.params.id));
 });
 
 module.exports = router;
