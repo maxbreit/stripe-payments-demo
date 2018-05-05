@@ -9,12 +9,14 @@
 </head>
 
 <body>
+  <button id="pay-ww">WW</button>
+  <button id="pay-lw">LW</button>
+  <button id="pay-df">DF</button>
   <div id="ddsco-main" class="loading ddsco">
     <div id="checkout">
       <form id="payment-form" method="POST" action="/orders">
-        <p class="instruction">Complete your shipping and payment details below</p>
         <section class="sct-customer-data">
-          <h2 class="ddsco-h2">Shipping &amp; Billing Information</h2>
+          <h2 class="ddsco-h2">Persönliche Angaben</h2>
           <fieldset class="ddsco-fieldset with-state">
             <label>
               <span>Name</span>
@@ -24,24 +26,8 @@
               <span>Email</span>
               <input name="email" type="email" class="ddsco-input ddsco-field" placeholder="jenny@example.com" required>
             </label>
-            <label>
-              <span>Address</span>
-              <input name="address" class="ddsco-input ddsco-field" placeholder="185 Berry Street Suite 550">
-            </label>
-            <label>
-              <span>City</span>
-              <input name="city" class="ddsco-input ddsco-field" placeholder="San Francisco">
-            </label>
-            <label class="state">
-              <span>State</span>
-              <input name="state" class="ddsco-input ddsco-field" placeholder="CA">
-            </label>
-            <label class="zip">
-              <span>ZIP</span>
-              <input name="postal_code" class="ddsco-input ddsco-field" placeholder="94107">
-            </label>
             <label class="select">
-              <span>Country</span>
+              <span>Land</span>
               <div id="country" class="ddsco-field DE">
                 <select name="country">
                   <option value="AU">Australia</option>
@@ -74,15 +60,27 @@
               </div>
             </label>
           </fieldset>
-          <p class="tip">Select another country to see different payment options.</p>
+          <p class="tip">Ein anderes Land auswählen, um andere Zahlungsoptionen zu sehen.</p>
         </section>
         <section class="sct-payment-method">
-          <h2 class="ddsco-h2">Payment Information</h2>
+          <h2 class="ddsco-h2">Zahlungsmethoden</h2>
           <nav id="payment-methods">
             <ul>
               <li>
-                <input class="ddsco-input" type="radio" name="payment" id="payment-card" value="card" checked>
-                <label for="payment-card">Card</label>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-paypal" value="paypal" checked>
+                <label for="payment-paypal">PayPal</label>
+              </li>
+              <li>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-card" value="card">
+                <label for="payment-card">Kreditkarte</label>
+              </li>
+              <li>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-sepa_debit" value="sepa_debit">
+                <label for="payment-sepa_debit">Lastschrift</label>
+              </li>
+              <li>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-sofort" value="sofort">
+                <label for="payment-sofort">SOFORT</label>
               </li>
               <li>
                 <input class="ddsco-input" type="radio" name="payment" id="payment-alipay" value="alipay">
@@ -109,24 +107,12 @@
                 <label for="payment-multibanco">Multibanco</label>
               </li>
               <li>
-                <input class="ddsco-input" type="radio" name="payment" id="payment-sepa_debit" value="sepa_debit">
-                <label for="payment-sepa_debit">SEPA Direct Debit</label>
-              </li>
-              <li>
-                <input class="ddsco-input" type="radio" name="payment" id="payment-sofort" value="sofort">
-                <label for="payment-sofort">SOFORT</label>
-              </li>
-              <li>
                 <input class="ddsco-input" type="radio" name="payment" id="payment-wechat" value="wechat">
                 <label for="payment-wechat">WeChat Pay</label>
               </li>
-              <li>
-                <input class="ddsco-input" type="radio" name="payment" id="payment-paypal" value="paypal">
-                <label for="payment-paypal">PayPal</label>
-              </li>
             </ul>
           </nav>
-          <div class="payment-info card visible">
+          <div class="payment-info card">
             <fieldset class="ddsco-fieldset">
               <label class="ddsco-fieldset-label">
                 <span>Card</span>
@@ -155,7 +141,7 @@
             <div id="wechat-qrcode"></div>
             <p class="notice">Click the button below to generate a QR code for WeChat.</p>
           </div>
-          <div class="payment-info paypal">
+          <div class="payment-info paypal visible">
             <p class="notice">You’ll complete your payment on the PayPal site.</p>
           </div>
         </section>
