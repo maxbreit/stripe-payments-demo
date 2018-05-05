@@ -12,6 +12,7 @@ class Store {
   constructor() {
     this.lineItems = [];
     this.products = {};
+    this.urlPrefix = 'https://ee527d68.ngrok.io';
     //TODO figure out how to retrieve the product to be payed
     // this.displayOrderSummary();
   }
@@ -44,6 +45,7 @@ class Store {
   // Retrieve the configuration from the API.
   async getConfig() {
     try {
+      console.log('fetching config')
       const response = await fetch('/config');
       const config = await response.json();
       if (config.stripePublishableKey.includes('live')) {
@@ -59,7 +61,7 @@ class Store {
   // Load the product details.
   async loadProducts() {
     console.log('loading products...');
-    const productsResponse = await fetch('/products');
+    const productsResponse = await fetch(`${this.urlPrefix}/products`, {mode: 'cors'}); // {mode: 'cors'}
     const products = (await productsResponse.json()).data;
     products.forEach(product => (this.products[product.id] = product));
       console.log('products', this.products);
@@ -78,7 +80,7 @@ class Store {
     console.log('creating order...');
     try {
       console.log('request body', currency, items, email, shipping);
-      const response = await fetch('/orders', {
+      const response = await fetch(`${this.urlPrefix}/orders`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({
@@ -106,7 +108,7 @@ class Store {
   // Pay the specified order by sending a payment source alongside it.
   async payOrder(order, source) {
     try {
-      const response = await fetch(`/orders/${order.id}/pay`, {
+      const response = await fetch(`${this.urlPrefix}/orders/${order.id}/pay`, {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify({source}),
@@ -125,7 +127,7 @@ class Store {
   // Fetch an order status from the API.
   async getOrderStatus(orderId) {
     try {
-      const response = await fetch(`/orders/${orderId}`);
+      const response = await fetch(`${this.urlPrefix}/orders/${orderId}`);
       return await response.json();
     } catch (err) {
       return {error: err};
