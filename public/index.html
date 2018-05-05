@@ -9,7 +9,7 @@
 </head>
 
 <body>
-  <div id="ddsco-main" class="loading">
+  <div id="ddsco-main" class="loading ddsco">
     <div id="checkout">
       <form id="payment-form" method="POST" action="/orders">
         <p class="instruction">Complete your shipping and payment details below</p>
@@ -120,6 +120,10 @@
                 <input class="ddsco-input" type="radio" name="payment" id="payment-wechat" value="wechat">
                 <label for="payment-wechat">WeChat Pay</label>
               </li>
+              <li>
+                <input class="ddsco-input" type="radio" name="payment" id="payment-paypal" value="paypal">
+                <label for="payment-paypal">PayPal</label>
+              </li>
             </ul>
           </nav>
           <div class="payment-info card visible">
@@ -151,6 +155,10 @@
             <div id="wechat-qrcode"></div>
             <p class="notice">Click the button below to generate a QR code for WeChat.</p>
           </div>
+          <div class="payment-info paypal">
+            <p class="notice">You’ll be redirected to the PayPal site to complete your payment.</p>
+            <div id="paypal-button-container" style="visibility: hidden"></div>
+          </div>
         </section>
         <button type="submit">Pay</button>
       </form>
@@ -180,6 +188,8 @@
   </div>
   <!-- Stripe.js v3 for Elements -->
   <script src="https://js.stripe.com/v3/"></script>
+  <!--PayPal checkout.js-->
+  <script src="https://www.paypalobjects.com/api/checkout.js"></script>
   <!-- Library to render QR codes -->
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   <!-- App -->

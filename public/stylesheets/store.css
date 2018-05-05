@@ -3,27 +3,6 @@
  * Stripe Payments Demo. Created by Romain Huet (@romainhuet).
  */
 
-* {
-  margin: 0;
-  padding: 0;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: none;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-  font-size: 15px;
-  line-height: 1.4em;
-  color: #525f7f;
-}
-
-/*body {*/
-  /*display: flex;*/
-  /*flex-direction: row;*/
-  /*align-items: center;*/
-  /*background: #f8fbfd;*/
-/*}*/
-
 /* Overall Container */
 
 #ddsco-main {
@@ -34,7 +13,7 @@
   background: #f8fbfd;
 }
 
-#ddsco-main* {
+.ddsco * {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
@@ -52,38 +31,6 @@
 #ddsco-main.checkout:not(.success):not(.error) {
   /*width: calc(100% - 450px);*/
 }
-
-/* Header */
-
-/*header {*/
-  /*display: flex;*/
-  /*flex-direction: row;*/
-  /*justify-content: space-between;*/
-  /*width: 100%;*/
-  /*height: 80px;*/
-  /*background: #fff url(/images/logo.svg) center center no-repeat;*/
-  /*border-bottom: 1px solid #f3f3ff;*/
-/*}*/
-
-/*header a.shop,*/
-/*header a.github {*/
-  /*margin: 30px;*/
-  /*font-size: 13px;*/
-  /*font-weight: 500;*/
-  /*color: #666ee8;*/
-  /*letter-spacing: 0.3px;*/
-  /*text-transform: uppercase;*/
-  /*text-decoration: none;*/
-/*}*/
-
-/*header a.github {*/
-  /*padding-left: 20px;*/
-  /*background: url(/images/github.svg) left center no-repeat;*/
-/*}*/
-
-/*header a:hover {*/
-  /*text-decoration: underline;*/
-/*}*/
 
 /* Checkout */
 
