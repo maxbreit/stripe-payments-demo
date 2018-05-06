@@ -18,6 +18,7 @@
   // const config = require('../config');
 
   let amount = 0;
+  let courseName = '';
 
   // Create references to the main form and its submit button.
   const form = document.getElementById('payment-form');
@@ -96,12 +97,13 @@
     paypal.Button.render({
 
         env: 'sandbox', // sandbox | production
-        locale: 'en_US',
+        locale: 'en_DE',
 
         // PayPal Client IDs - replace with your own
         // Create a PayPal app: https://developer.paypal.com/developer/applications/create
         client: {
-            sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            // sandbox: 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R',
+            sandbox: 'Afftm3m1c0dUx734SjzbUduO62yQzhxT2J1BptiJF9JfVGhqpMwt4q4rJY-6oLyE5LpB1Adm391Vzner',
             production: '<insert production client id>'
         },
         style: {
@@ -122,9 +124,27 @@
             // Make a call to the REST api to create the payment
             return actions.payment.create({
                 payment: {
+                    intent: 'sale',
                     transactions: [
                         {
-                            amount: {total: amount / 100, currency: 'EUR'}
+                            amount: {
+                              total: amount / 100,
+                              currency: 'EUR',
+                            },
+                            description: courseName,
+                            reference_id: courseName.toLocaleLowerCase().split(' ').join('-'),
+                            item_list: {
+                                items: [
+                                    {
+                                        name: courseName,
+                                        sku: "1",
+                                        price: (amount / 100).toString() + ".00",
+                                        currency: "EUR",
+                                        quantity: "1",
+                                        description: courseName,
+                                    },
+                                ]
+                            }
                         }
                     ]
                 }
@@ -182,14 +202,6 @@
     .addEventListener('change', event => {
       event.preventDefault();
       const country = event.target.value;
-      const zipLabel = form.querySelector('label.zip');
-      // Only show the state input for the United States.
-      zipLabel.parentElement.classList.toggle('with-state', country === 'US');
-      // Update the ZIP label to make it more relevant for each country.
-      form.querySelector('label.zip span').innerText =
-        country === 'US'
-          ? 'ZIP'
-          : country === 'UK' ? 'Postcode' : 'Postal Code';
       event.target.parentElement.className = `ddsco-field ${country}`;
       showRelevantPaymentMethods(country);
     });
@@ -205,16 +217,6 @@
     const country = form.querySelector('select[name=country] option:checked')
       .value;
     const email = form.querySelector('input[name=email]').value;
-    // const shipping = {
-    //   name,
-    //   address: {
-    //     line1: form.querySelector('input[name=address]').value,
-    //     city: form.querySelector('input[name=city]').value,
-    //     postal_code: form.querySelector('input[name=postal_code]').value,
-    //     state: form.querySelector('input[name=state]').value,
-    //     country,
-    //   },
-    // };
     // Disable the Pay button to prevent multiple click events.
     submitButton.disabled = true;
 
@@ -470,40 +472,15 @@
   // List of relevant countries for the payment methods supported in this demo.
   // Read the Stripe guide: https://stripe.com/payments/payment-methods-guide
   const paymentMethods = {
-    alipay: {
-      name: 'Alipay',
-      flow: 'redirect',
-      countries: ['CN', 'HK', 'SG', 'JP'],
-    },
-    bancontact: {
-      name: 'Bancontact',
-      flow: 'redirect',
-      countries: ['BE'],
-    },
     card: {
       name: 'Card',
       flow: 'none',
     },
-    eps: {
-      name: 'EPS',
-      flow: 'redirect',
-      countries: ['AT'],
-    },
-    ideal: {
-      name: 'iDEAL',
-      flow: 'redirect',
-      countries: ['NL'],
-    },
-    giropay: {
-      name: 'Giropay',
-      flow: 'redirect',
-      countries: [],
-    },
-    multibanco: {
-      name: 'Multibanco',
-      flow: 'receiver',
-      countries: ['PT'],
-    },
+    // giropay: {
+    //   name: 'Giropay',
+    //   flow: 'redirect',
+    //   countries: [],
+    // },
     sepa_debit: {
       name: 'SEPA Direct Debit',
       flow: 'none',
@@ -513,11 +490,6 @@
       name: 'SOFORT',
       flow: 'redirect',
       countries: ['DE', 'AT'],
-    },
-    wechat: {
-      name: 'WeChat',
-      flow: 'none',
-      countries: ['CN', 'HK', 'SG', 'JP'],
     },
     paypal: {
       name: 'PayPal',
@@ -632,7 +604,7 @@
   const btnDf = document.getElementById('pay-df');
   // Listen to clicks on payment trigger buttons and update the item in the order accordingly
   const inputPaymentValue = (btnEvent) => {
-    let courseName = courseIdNameMap.get(btnEvent.target.id);
+    courseName = courseIdNameMap.get(btnEvent.target.id);
     console.log('User wants to pay for...', courseName);
     store.flushItemList();
     store.addItemToList(courseName);
