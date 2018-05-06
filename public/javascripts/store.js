@@ -12,7 +12,7 @@ class Store {
   constructor() {
     this.lineItems = [];
     this.products = {};
-    this.urlPrefix = 'https://6f3baab9.ngrok.io';
+    this.urlPrefix = 'https://doodance-stripe.herokuapp.com';
   }
 
   // Add the item with the specified name to the list of line items
