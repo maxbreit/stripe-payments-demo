@@ -10,7 +10,7 @@
   height: 100vh;
   text-align: center;
   transition: width 0.3s ease-in-out;
-  background: #f8fbfd;
+  /*background: #f8fbfd;*/
 }
 
 .ddsco * {
@@ -669,13 +669,13 @@ button#ddsco-submit-btn:active {
 
 #confirmation .status {
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  padding: 0 75px 0 275px;
+  flex-direction: column;
+  padding: 25px;
   max-width: 75%;
   height: 350px;
   margin: 100px auto;
-  background: #fff url(/images/order.svg) 75px center no-repeat;
+  /*background: #fff url(/images/order.svg) 75px center no-repeat;*/
   box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15);
   border-radius: 6px;
 }
@@ -807,8 +807,8 @@ button#ddsco-submit-btn:active {
   #confirmation .status {
     width: auto;
     height: auto;
-    padding: 120px 15px 15px;
-    background: #fff url(/images/order.svg) center 15px no-repeat;
+    padding: 15px;
+    /*background: #fff url(/images/order.svg) center 15px no-repeat;*/
     background-size: 68px 86px;
     box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15);
     border-radius: 6px;
