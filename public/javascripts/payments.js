@@ -156,7 +156,10 @@
             console.log('buyer approved the payment');
             // Make a call to the REST api to execute the payment
             return actions.payment.execute().then(function () {
-                window.alert('Payment Complete!');
+                console.log('showing confirmation screen');
+                document.getElementById('paypal-button-container')
+                    .style.display = 'none';
+                showConfirmationScreen();
             });
         },
         // called if the buyer cancels the payment
@@ -279,6 +282,17 @@
     }
   });
 
+  const showConfirmationScreen = () => {
+      let mainElement = document.getElementById('ddsco-main');
+      let confirmationElement = document.getElementById('confirmation');
+      // Success! Payment is confirmed. Update the interface to display the confirmation screen.
+      mainElement.classList.remove('processing');
+      // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
+      confirmationElement.querySelector('.note').innerText =
+          'We just sent your receipt to your email address, and your items will be on their way shortly.';
+      mainElement.classList.add('success');
+  };
+
   // Handle the order and source activation if required
   const handleOrder = async (order, source) => {
   console.log('handling order', order, source);
@@ -370,13 +384,8 @@
         break;
 
       case 'paid':
-          console.log('order paid!')
-        // Success! Payment is confirmed. Update the interface to display the confirmation screen.
-        mainElement.classList.remove('processing');
-        // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
-        confirmationElement.querySelector('.note').innerText =
-          'We just sent your receipt to your email address, and your items will be on their way shortly.';
-        mainElement.classList.add('success');
+          console.log('order paid!');
+          showConfirmationScreen();
         break;
     }
   };
