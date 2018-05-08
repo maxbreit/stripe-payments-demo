@@ -556,8 +556,7 @@
 
     // Select the default country from the config on page load.
     const countrySelector = document.getElementById('country');
-    countrySelector.querySelector(`option[value=${'DE'}]`).selected =
-        'selected';
+    countrySelector.querySelector(`option[value=${'DE'}]`).selected = 'selected';
     countrySelector.className = `ddsco-field ${'DE'}`;
     // Create a map of the button ids and course names
     const courseIdNameMap = new Map();
@@ -575,7 +574,10 @@
         store.flushItemList();
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
-
+        // display course name & amount
+        document.getElementById('ddsco-course-title')
+            .innerText = courseName + ' Kurs ' + (amount / 100).toString() + '€';
+        // update button label with amount
         const paymentInputs = form.querySelectorAll('input[name=payment]');
         for (let i = 0; i < paymentInputs.length; i++) {
             let input = paymentInputs[i];
