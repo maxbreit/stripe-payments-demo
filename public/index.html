@@ -20,11 +20,11 @@
           <fieldset class="ddsco-fieldset with-state">
             <label>
               <span>Name</span>
-              <input name="name" class="ddsco-input ddsco-field" placeholder="Jenny Rosen" required>
+              <input name="name" class="ddsco-input ddsco-field" placeholder="Max Mustermann" required>
             </label>
             <label>
               <span>Email</span>
-              <input name="email" type="email" class="ddsco-input ddsco-field" placeholder="jenny@example.com" required>
+              <input name="email" type="email" class="ddsco-input ddsco-field" placeholder="max@beispiel.de" required>
             </label>
             <label class="select">
               <span>Land</span>
@@ -60,7 +60,6 @@
               </div>
             </label>
           </fieldset>
-          <p class="tip">Ein anderes Land auswählen, um andere Zahlungsoptionen zu sehen.</p>
         </section>
         <section class="sct-payment-method">
           <h2 class="ddsco-h2">Zahlungsmethoden</h2>
@@ -100,25 +99,18 @@
             <fieldset class="ddsco-fieldset">
               <label class="ddsco-fieldset-label">
                 <span>IBAN</span>
-                <input name="iban" class="ddsco-input ddsco-field" placeholder="FR14 2004 1010 0505 0001 3M02 606" />
+                <input name="iban" class="ddsco-input ddsco-field" placeholder="DE89 3704 0044 0532 0130 00" />
               </label>
             </fieldset>
-            <p class="notice">By providing your IBAN and confirming this payment, you’re authorizing Payments Demo and Stripe, our payment
-              provider, to send instructions to your bank to debit your account. You’re entitled to a refund under the terms
-              and conditions of your agreement with your bank.</p>
+            <p class="notice">Indem du deine IBAN zur Verfügung stellst und diese Zahlung bestätigst, autorisierst du
+              Doodance und Stripe, unseren Zahlungsanbieter, Anweisungen an deine Bank zu senden, um dein Konto zu belasten.</p>
           </div>
           <div class="payment-info redirect">
-            <p class="notice">You’ll be redirected to the banking site to complete your payment.</p>
-          </div>
-          <div class="payment-info receiver">
-            <p class="notice">Payment information will be provided after you place the order.</p>
-          </div>
-          <div class="payment-info wechat">
-            <div id="wechat-qrcode"></div>
-            <p class="notice">Click the button below to generate a QR code for WeChat.</p>
+            <p class="notice">Du wirst auf die Seite deiner Bank weitergeleitet, um deinen Einkauf abzuschließen.</p>
           </div>
           <div class="payment-info paypal visible">
-            <p class="notice">You’ll complete your payment on the PayPal site.</p>
+            <p class="notice">Mit einem Klick auf “Kurs kaufen” kaufst du verbindlich den ausgewählten Kurs
+              und wirst auf Paypal weitergeleitet, um den Bezahlvorgang abzuschließen.</p>
           </div>
         </section>
         <div id="paypal-button-container" style="display: none"></div>
@@ -128,9 +120,11 @@
     </div>
     <div id="confirmation">
       <div class="status processing">
-        <h1 class="ddsco-h1">Completing your order…</h1>
-        <p>We’re just waiting for the confirmation from your bank… This might take a moment but feel free to close this page.</p>
-        <p>We’ll send your receipt via email shortly.</p>
+        <h1 class="ddsco-h1">Dein Einkauf wird abgeschlossen...</h1>
+        <p>Wir warten nur auf die Bestätigung von deiner Bank.... Dies kann einen Moment dauern, aber du kannst diese
+          Seite gerne schließen.</p>
+        <p>Wir senden dir deine Quittung und weitere Anweisungen wie du Zugang zum Kurs erhälst, in Kürze per Email
+          zu.</p>
       </div>
       <div class="status success">
         <h1 class="ddsco-h1">Vielen Dank für deinen Einkauf!</h1>
@@ -138,14 +132,11 @@
         <p class="note">In den nächsten 5 Minuten senden wir dir eine Buchungsbestätigung und Anweisungen wie du
           Zugang zu deinem Kurs erhältst.</p>
       </div>
-      <div class="status receiver">
-        <h1 class="ddsco-h1">Thanks! One last step!</h1>
-        <p>Please make a payment using the details below to complete your order.</p>
-        <div class="info"></div>
-      </div>
       <div class="status error">
-        <h1 class="ddsco-h1">Oops, payment failed.</h1>
-        <p>It looks like your order could not be paid at this time. Please try again or select a different payment option.</p>
+        <h1 class="ddsco-h1"> Uups, deine Zahlung ist fehlgeschlagen.</h1>
+        <p>Es sieht so aus, als ob deine Zahlung nicht erfolgreich war. Bitte versuche es erneut oder wähle eine andere
+          Zahlungsoption.</p>
+        <p id="ddsco-payment-error-msg"></p>
       </div>
     </div>
   </div>
