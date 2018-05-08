@@ -63,12 +63,12 @@ router.post('/orders/:id/pay', async (req, res, next) => {
       source = await dynamic3DS(source, order, req);
     }
     // Demo: In test mode, replace the source with a test token so charges can work.
-    if (!source.livemode) {
-      source.id = 'tok_visa';
-    }
+    // if (!source.livemode) {
+    //   source.id = 'tok_visa';
+    // }
     // Pay the order using the Stripe source.
     if (source && source.status === 'chargeable') {
-      let charge, status;
+      let charge, status, errorMessage;
       try {
         charge = await stripe.charges.create(
           {
@@ -86,6 +86,7 @@ router.post('/orders/:id/pay', async (req, res, next) => {
       } catch (err) {
         // This is where you handle declines and errors.
         // For the demo we simply set to failed.
+        errorMessage = err.message;
         status = 'failed';
       }
       if (charge && charge.status === 'succeeded') {
@@ -96,7 +97,7 @@ router.post('/orders/:id/pay', async (req, res, next) => {
         status = 'failed';
       }
       // Update the order with the charge status.
-      order = await orders.update(order.id, {metadata: {status}});
+      order = await orders.update(order.id, {metadata: {status, errorMessage}});
     }
     return res.status(200).json({order, source});
   } catch (err) {
