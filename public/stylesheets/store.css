@@ -471,7 +471,7 @@ button#ddsco-submit-btn:active {
 
 .payment-errors {
   display: inline-flex;
-  margin: 15px auto 0;
+  margin: 0 auto;
   padding-left: 20px;
   color: #e25950;
   opacity: 0;
@@ -693,19 +693,16 @@ button#ddsco-submit-btn:active {
   list-style: none;
 }
 
-#ddsco-main.success:not(.processing) #confirmation .status.processing,
-#ddsco-main.success:not(.receiver) #confirmation .status.receiver {
+#ddsco-main.success:not(.processing) #confirmation .status.processing {
   display: none;
 }
 
-#ddsco-main.processing #confirmation .status.success,
-#ddsco-main.receiver #confirmation .status.success {
+#ddsco-main.processing #confirmation .status.success{
   display: none;
 }
 
 #ddsco-main.error #confirmation .status.success,
-#ddsco-main.error #confirmation .status.processing,
-#ddsco-main.error #confirmation .status.receiver {
+#ddsco-main.error #confirmation .status.processing{
   display: none;
 }
 

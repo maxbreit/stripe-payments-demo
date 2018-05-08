@@ -251,7 +251,7 @@
         redirect: {
           return_url: window.location.href,
         },
-        statement_descriptor: 'Stripe Payments Demo',
+        statement_descriptor: 'Doodance Stripe Payments',
         metadata: {
           order: order.id,
         },
@@ -332,42 +332,6 @@
               case 'code_verification':
                 // Display a code verification input to verify the source.
                 break;
-              case 'receiver':
-                // Display the receiver address to send the funds to.
-                mainElement.classList.add('success', 'receiver');
-                const receiverInfo = confirmationElement.querySelector(
-                  '.receiver .info'
-                );
-                if (source.type === 'multibanco') {
-                  // Display the Multibanco payment information to the user.
-                  let amount = store.formatPrice(
-                    source.amount,
-                    'eur'
-                  );
-                  receiverInfo.innerHTML = `
-                    <ul>
-                      <li>
-                        Amount (Montante):
-                        <strong>${amount}</strong>
-                      </li>
-                      <li>
-                        Entity (Entidade):
-                        <strong>${source.multibanco.entity}</strong>
-                      </li>
-                      <li>
-                        Reference (Referencia):
-                        <strong>${source.multibanco.reference}</strong>
-                      </li>
-                    </ul>`;
-
-                  // Poll the backend and check for an order status.
-                  // The backend updates the status upon receiving webhooks,
-                  // specifically the `source.chargeable` and `charge.succeeded` events.
-                  pollOrderStatus(order.id);
-                } else {
-                  console.log('Unhandled receiver flow.', source);
-                }
-                break;
               default:
                 // Order is received, pending payment confirmation.
                 break;
@@ -387,6 +351,7 @@
 
       case 'pending':
           console.log('order pending...')
+          debugger;
         // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
@@ -396,11 +361,11 @@
         break;
 
       case 'failed':
-          console.log('order failed')
+          console.log('order failed with message', order.metadata.errorMessage);
+        document.getElementById('ddsco-payment-error-msg').innerText = order.metadata.errorMessage;
         // Payment for the order has failed.
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
-        mainElement.classList.remove('receiver');
         mainElement.classList.add('error');
         break;
 
@@ -408,7 +373,6 @@
           console.log('order paid!')
         // Success! Payment is confirmed. Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
-        mainElement.classList.remove('receiver');
         // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
         confirmationElement.querySelector('.note').innerText =
           'We just sent your receipt to your email address, and your items will be on their way shortly.';
@@ -548,7 +512,6 @@
     form.querySelector('.payment-info.paypal').classList.add('visible');
     form.querySelector('.payment-info.card').classList.remove('visible');
     form.querySelector('.payment-info.sepa_debit').classList.remove('visible');
-    form.querySelector('.payment-info.wechat').classList.remove('visible');
     form.querySelector('.payment-info.redirect').classList.remove('visible');
     updateButtonLabel(paymentInputs[0].value);
   };
@@ -571,14 +534,8 @@
         .querySelector('.payment-info.sepa_debit')
         .classList.toggle('visible', payment === 'sepa_debit');
       form
-        .querySelector('.payment-info.wechat')
-        .classList.toggle('visible', payment === 'wechat');
-      form
         .querySelector('.payment-info.redirect')
         .classList.toggle('visible', flow === 'redirect');
-      form
-        .querySelector('.payment-info.receiver')
-        .classList.toggle('visible', flow === 'receiver');
       form
         .querySelector('.payment-info.paypal')
         .classList.toggle('visible', flow === 'paypal');
