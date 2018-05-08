@@ -208,6 +208,7 @@
              * An error occurred during the transaction
              */
             console.log('An error occurred during the transaction')
+            showErrorScreen(err.message);
         },
         // called for every click on the PayPal button
         onClick: function () {
@@ -324,30 +325,71 @@
     });
 
     const showConfirmationScreen = () => {
+        let mainElement = document.getElementById('ddsco-main');
         // Success! Payment is confirmed.
         // hide PayPal button
-        document.getElementById('paypal-button-container')
-            .style.display = 'none';
+        document.getElementById('paypal-button-container').style.display = 'none';
         // hide course title
         document.getElementById('ddsco-course-title').style.display = 'none';
-        let mainElement = document.getElementById('ddsco-main');
-        // let confirmationElement = document.getElementById('confirmation');
+        // hide form
+        document.getElementById('payment-form').style.display = 'none';
+        // hide validation errors
+        document.getElementById('card-errors').style.display = 'none';
+        document.getElementById('iban-errors').style.display = 'none';
         // Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
-        // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
-        // confirmationElement.querySelector('.note').innerText =
-        //     'We just sent your receipt to your email address, and your items will be on their way shortly.';
         mainElement.classList.add('success');
-        document.getElementById('ddsco-confirmation').style.display = 'flex';
-        document.getElementById('payment-form').style.display = 'none';
         document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        document.getElementById('ddsco-confirmation').style.display = 'initial';
+    };
+
+    const showProcessingScreen = () => {
+        let mainElement = document.getElementById('ddsco-main');
+        // hide PayPal button
+        document.getElementById('paypal-button-container').style.display = 'none';
+        // hide course title
+        document.getElementById('ddsco-course-title').style.display = 'none';
+        // hide form
+        document.getElementById('payment-form').style.display = 'none';
+        // hide validation errors
+        document.getElementById('card-errors').style.display = 'none';
+        document.getElementById('iban-errors').style.display = 'none';
+        // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
+        mainElement.classList.remove('processing');
+        document.getElementById('ddsco-confirmation').style.display = 'initial';
+        // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
+        // confirmationElement.querySelector('.note').innerText =
+        //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
+        mainElement.classList.add('success');
+    };
+
+    const showErrorScreen = (failureMessage) => {
+        let mainElement = document.getElementById('ddsco-main');
+        // Payment for the order has failed.
+        // hide PayPal button
+        document.getElementById('paypal-button-container').style.display = 'none';
+        // hide course title
+        document.getElementById('ddsco-course-title').style.display = 'none';
+        // hide form
+        document.getElementById('payment-form').style.display = 'none';
+        // hide validation errors
+        document.getElementById('card-errors').style.display = 'none';
+        document.getElementById('iban-errors').style.display = 'none';
+        // display the wrapper
+        document.getElementById('ddsco-confirmation').style.display = 'initial';
+        // display the failure reasure
+        document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
+        // display the button for closing the pop-up
+        document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        // update CSS classes
+        mainElement.classList.remove('success');
+        mainElement.classList.remove('processing');
+        mainElement.classList.add('error');
     };
 
     // Handle the order and source activation if required
     const handleOrder = async (order, source) => {
         console.log('handling order', order, source);
-        const mainElement = document.getElementById('ddsco-main');
-        const confirmationElement = document.getElementById('ddsco-confirmation');
         switch (order.metadata.status) {
             case 'created':
                 console.log('order created...')
@@ -392,30 +434,13 @@
                 break;
 
             case 'pending':
-                document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
                 console.log('order pending...')
-                // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
-                mainElement.classList.remove('processing');
-                document.getElementById('ddsco-course-title').style.display = 'none';
-                document.getElementById('payment-form').style.display = 'none';
-                confirmationElement.style.display = 'initial';
-                // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
-                // confirmationElement.querySelector('.note').innerText =
-                //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
-                mainElement.classList.add('success');
+                showConfirmationScreen();
                 break;
 
             case 'failed':
                 console.log('order failed with message', order.metadata.errorMessage);
-                document.getElementById('ddsco-payment-error-msg').innerText = order.metadata.errorMessage;
-                // Payment for the order has failed.
-                document.getElementById('ddsco-course-title').style.display = 'none';
-                document.getElementById('payment-form').style.display = 'none';
-                confirmationElement.style.display = 'initial';
-                document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
-                mainElement.classList.remove('success');
-                mainElement.classList.remove('processing');
-                mainElement.classList.add('error');
+                showErrorScreen(order.metadata.errorMessage);
                 break;
 
             case 'paid':
