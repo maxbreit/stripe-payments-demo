@@ -91,6 +91,38 @@
      */
 
     /**
+     * Implement a Stripe IBAN Element that matches the look-and-feel of the app.
+     *
+     * This makes it easy to collect bank account information.
+     */
+
+        // Create a IBAN Element and pass the right options for styles and supported countries.
+    const ibanOptions = {
+            elementsOptions,
+            supportedCountries: ['SEPA'],
+        };
+    const iban = elements.create('iban', ibanOptions);
+
+    // Mount the IBAN Element on the page.
+    iban.mount('#iban-element');
+
+    // Monitor change events on the IBAN Element to display any errors.
+    iban.on('change', ({error, bankName}) => {
+        const ibanErrors = document.getElementById('iban-errors');
+        if (error) {
+            ibanErrors.textContent = error.message;
+            ibanErrors.classList.add('visible');
+        } else {
+            ibanErrors.classList.remove('visible');
+            if (bankName) {
+                updateButtonLabel('sepa_debit', bankName);
+            }
+        }
+        // Re-enable the Pay button.
+        submitButton.disabled = false;
+    });
+
+    /**
      * Implement a PayPal Checkout button.
      *
      */
@@ -157,8 +189,6 @@
             // Make a call to the REST api to execute the payment
             return actions.payment.execute().then(function () {
                 console.log('showing confirmation screen');
-                document.getElementById('paypal-button-container')
-                    .style.display = 'none';
                 showConfirmationScreen();
             });
         },
@@ -241,6 +271,23 @@
                 },
             });
             await handleOrder(order, source);
+        } else if (payment === 'sepa_debit') {
+            // Create a SEPA Debit source from the IBAN information.
+            const sourceData = {
+                type: payment,
+                currency: order.currency,
+                owner: {
+                    name,
+                    email,
+                },
+                mandate: {
+                    // Automatically send a mandate notification email to your customer
+                    // once the source is charged.
+                    notification_method: 'email',
+                },
+            };
+            const {source} = await stripe.createSource(iban, sourceData);
+            await handleOrder(order, source);
         } else {
             // Prepare all the Stripe source common data.
             const sourceData = {
@@ -268,43 +315,46 @@
                         iban: form.querySelector('input[name=iban]').value,
                     };
                     break;
-                case 'sofort':
-                    // SOFORT: The country is required before redirecting to the bank.
-                    sourceData.sofort = {
-                        country,
-                    };
-                    break;
             }
 
             // Create a Stripe source with the common data and extra information.
-            const {source} = await stripe.createSource(sourceData);
-            await handleOrder(order, source);
+            const {source, error} = await stripe.createSource(sourceData);
+            await handleOrder(order, source, error);
         }
     });
 
     const showConfirmationScreen = () => {
+        // Success! Payment is confirmed.
+        // hide PayPal button
+        document.getElementById('paypal-button-container')
+            .style.display = 'none';
+        // hide course title
+        document.getElementById('ddsco-course-title').style.display = 'none';
         let mainElement = document.getElementById('ddsco-main');
-        let confirmationElement = document.getElementById('confirmation');
-        // Success! Payment is confirmed. Update the interface to display the confirmation screen.
+        // let confirmationElement = document.getElementById('confirmation');
+        // Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         // Update the note about receipt and shipping (the payment has been fully confirmed by the bank).
-        confirmationElement.querySelector('.note').innerText =
-            'We just sent your receipt to your email address, and your items will be on their way shortly.';
+        // confirmationElement.querySelector('.note').innerText =
+        //     'We just sent your receipt to your email address, and your items will be on their way shortly.';
         mainElement.classList.add('success');
+        document.getElementById('ddsco-confirmation').style.display = 'flex';
+        document.getElementById('payment-form').style.display = 'none';
+        document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
     };
 
     // Handle the order and source activation if required
     const handleOrder = async (order, source) => {
         console.log('handling order', order, source);
         const mainElement = document.getElementById('ddsco-main');
-        const confirmationElement = document.getElementById('confirmation');
+        const confirmationElement = document.getElementById('ddsco-confirmation');
         switch (order.metadata.status) {
             case 'created':
                 console.log('order created...')
                 switch (source.status) {
                     case 'chargeable':
                         console.log('case chargeable...')
-                        submitButton.textContent = 'Processing Payment…';
+                        submitButton.textContent = 'Zahlungsvorgang läuft…';
                         const response = await store.payOrder(order, source);
                         await handleOrder(response.order, response.source);
                         break;
@@ -314,29 +364,7 @@
                             case 'none':
                                 // Normally, sources with a `flow` value of `none` are chargeable right away,
                                 // but there are exceptions, for instance for WeChat QR codes just below.
-                                if (source.type === 'wechat') {
-                                    // Display the QR code.
-                                    const qrCode = new QRCode('wechat-qrcode', {
-                                        text: source.wechat.qr_code_url,
-                                        width: 128,
-                                        height: 128,
-                                        colorDark: '#424770',
-                                        colorLight: '#f8fbfd',
-                                        correctLevel: QRCode.CorrectLevel.H,
-                                    });
-                                    // Hide the previous text and update the call to action.
-                                    form.querySelector('.payment-info.wechat p').style.display =
-                                        'none';
-                                    let amount = store.formatPrice(
-                                        store.getOrderTotal(),
-                                        'eur'
-                                    );
-                                    submitButton.textContent = `Scan this QR code on WeChat to pay ${amount}`;
-                                    // Start polling the order status.
-                                    pollOrderStatus(order.id, 300000);
-                                } else {
-                                    console.log('Unhandled none flow.', source);
-                                }
+                                console.log('Unhandled none flow.', source);
                                 break;
                             case 'redirect':
                                 // Immediately redirect the customer.
@@ -364,13 +392,16 @@
                 break;
 
             case 'pending':
+                document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
                 console.log('order pending...')
-                debugger;
                 // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
                 mainElement.classList.remove('processing');
+                document.getElementById('ddsco-course-title').style.display = 'none';
+                document.getElementById('payment-form').style.display = 'none';
+                confirmationElement.style.display = 'initial';
                 // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
-                confirmationElement.querySelector('.note').innerText =
-                    'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
+                // confirmationElement.querySelector('.note').innerText =
+                //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
                 mainElement.classList.add('success');
                 break;
 
@@ -378,6 +409,10 @@
                 console.log('order failed with message', order.metadata.errorMessage);
                 document.getElementById('ddsco-payment-error-msg').innerText = order.metadata.errorMessage;
                 // Payment for the order has failed.
+                document.getElementById('ddsco-course-title').style.display = 'none';
+                document.getElementById('payment-form').style.display = 'none';
+                confirmationElement.style.display = 'initial';
+                document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
                 mainElement.classList.remove('success');
                 mainElement.classList.remove('processing');
                 mainElement.classList.add('error');
@@ -478,15 +513,7 @@
                 .style.display = 'initial';
         } else {
             let amount = store.formatPrice(store.getOrderTotal(), 'eur');
-            let name = paymentMethods[paymentMethod].name;
-            let label = `Pay ${amount}`;
-            if (paymentMethod !== 'card') {
-                label = `Pay ${amount} with ${name}`;
-            }
-            if (paymentMethod === 'wechat') {
-                label = `Generate QR code to pay ${amount} with ${name}`;
-            }
-            submitButton.innerText = label;
+            submitButton.innerText = `Jetzt kaufen ${amount}`;
             document.getElementById('paypal-button-container')
                 .style.display = 'none';
             submitButton.style.display = 'initial';
@@ -591,6 +618,18 @@
     if (btnDf) btnDf.onclick = inputPaymentValue;
     if (btnLw) btnLw.onclick = inputPaymentValue;
     if (btnWw) btnWw.onclick = inputPaymentValue;
+
+    const payCoursePopUpElement = document.getElementsByClassName('pay-course')[0];
+    const btnClosePopUp = document.getElementById('ddsco-close-popup-btn')
+
+    if (btnClosePopUp) {
+        console.log('btnClosePopUp exists');
+        btnClosePopUp.addEventListener("click", () => {
+            console.log('btnClosePopUp clicked');
+            payCoursePopUpElement.style.display = 'none';
+        });
+    }
+
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();
