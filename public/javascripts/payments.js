@@ -537,8 +537,8 @@
             document.getElementById('paypal-button-container')
                 .style.display = 'initial';
         } else {
-            let amount = store.formatPrice(store.getOrderTotal(), 'eur');
-            submitButton.innerText = `Jetzt kaufen ${amount}`;
+            // let amount = store.formatPrice(store.getOrderTotal(), 'eur');
+            submitButton.innerText = `Jetzt kaufen`;
             document.getElementById('paypal-button-container')
                 .style.display = 'none';
             submitButton.style.display = 'initial';
@@ -628,7 +628,7 @@
         amount = store.getOrderTotal();
         // display course name & amount
         document.getElementById('ddsco-course-title')
-            .innerText = courseName + ' Kurs ' + (amount / 100).toString() + '€';
+            .innerText = courseName + ' ' + (amount / 100).toString() + '€';
         // update button label with amount
         const paymentInputs = form.querySelectorAll('input[name=payment]');
         for (let i = 0; i < paymentInputs.length; i++) {
