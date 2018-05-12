@@ -644,13 +644,19 @@
     if (btnLw) btnLw.onclick = inputPaymentValue;
     if (btnWw) btnWw.onclick = inputPaymentValue;
 
+    // buttons for closing the modal
     const payCoursePopUpElement = document.getElementsByClassName('pay-course')[0];
-    const btnClosePopUp = document.getElementById('ddsco-close-popup-btn')
+    const btnClosePopUp = document.getElementById('ddsco-close-popup-btn');
+    const btnClosePopUpX = document.getElementById('ddsco-close-popup-x-btn');
 
     if (btnClosePopUp) {
-        console.log('btnClosePopUp exists');
         btnClosePopUp.addEventListener("click", () => {
-            console.log('btnClosePopUp clicked');
+            payCoursePopUpElement.style.display = 'none';
+        });
+    }
+
+    if (btnClosePopUpX) {
+        btnClosePopUpX.addEventListener("click", () => {
             payCoursePopUpElement.style.display = 'none';
         });
     }
