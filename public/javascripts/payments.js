@@ -28,8 +28,8 @@
      * Setup Stripe Elements.
      */
 
-        // Create a Stripe client.
-        // const stripe = Stripe(config.stripePublishableKey);
+    // Create a Stripe client.
+    // const stripe = Stripe(config.stripePublishableKey);
     const stripe = Stripe('pk_test_CiXf29IdSdWEmeZGORUfnSFc');
 
     // Create an instance of Elements.
@@ -341,6 +341,7 @@
         mainElement.classList.add('success');
         document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
         document.getElementById('ddsco-confirmation').style.display = 'initial';
+        window.setTimeout(resetForm, 5000);
     };
 
     const showProcessingScreen = () => {
@@ -361,6 +362,7 @@
         // confirmationElement.querySelector('.note').innerText =
         //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
         mainElement.classList.add('success');
+        window.setTimeout(resetForm, 5000);
     };
 
     const showErrorScreen = (failureMessage) => {
@@ -385,6 +387,33 @@
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
         mainElement.classList.add('error');
+        window.setTimeout(resetForm, 5000);
+    };
+
+    const resetForm = () => {
+        console.log('resetting form...')
+        if (payCoursePopUpElement) payCoursePopUpElement.style.display = 'none';
+        let mainElement = document.getElementById('ddsco-main');
+        mainElement.classList.remove('success');
+        mainElement.classList.remove('processing');
+        mainElement.classList.remove('error');
+        mainElement.classList.add('checkout');
+        // hide the button for closing the pop-up
+        document.getElementById('ddsco-close-popup-btn').style.display = 'none';
+        document.getElementById('payment-form').style.display = 'initial';
+        document.getElementById('ddsco-course-title').style.display = 'initial';
+        document.getElementById('card-errors').style.display = 'initial';
+        document.getElementById('iban-errors').style.display = 'initial';
+        // show PayPal button
+        document.getElementById('paypal-button-container').style.display = 'initial';
+        // hide confirmation
+        document.getElementById('ddsco-confirmation').style.display = 'none';
+        document.getElementById('ddsco-payment-error-msg').innerText = '';
+        //empty/reset input fields
+        card.clear();
+        iban.clear();
+        form.reset();
+        showRelevantPaymentMethods();
     };
 
     // Handle the order and source activation if required
