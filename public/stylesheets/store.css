@@ -58,8 +58,9 @@ main#ddsco {
 
 #ddsco-close-popup-x-btn {
 	position: absolute;
-	top: 0;
-	right: 0;
+	font-weight: 700;
+	top: -20px;
+	right: -15px;
 }
 
 #ddsco-main.checkout #checkout {
