@@ -341,7 +341,6 @@
         mainElement.classList.add('success');
         document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
         document.getElementById('ddsco-confirmation').style.display = 'initial';
-        window.setTimeout(resetForm, 5000);
     };
 
     const showProcessingScreen = () => {
@@ -362,7 +361,6 @@
         // confirmationElement.querySelector('.note').innerText =
         //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
         mainElement.classList.add('success');
-        window.setTimeout(resetForm, 5000);
     };
 
     const showErrorScreen = (failureMessage) => {
@@ -387,12 +385,9 @@
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
         mainElement.classList.add('error');
-        window.setTimeout(resetForm, 5000);
     };
 
     const resetForm = () => {
-        console.log('resetting form...')
-        if (payCoursePopUpElement) payCoursePopUpElement.style.display = 'none';
         let mainElement = document.getElementById('ddsco-main');
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
@@ -677,17 +672,27 @@
     const payCoursePopUpElement = document.getElementsByClassName('pay-course')[0];
     const btnClosePopUp = document.getElementById('ddsco-close-popup-btn');
     const btnClosePopUpX = document.getElementById('ddsco-close-popup-x-btn');
+    const popupBackground = document.querySelectorAll('[data-ix=hide-payment-form]')[0];
 
     if (btnClosePopUp) {
         btnClosePopUp.addEventListener("click", () => {
             payCoursePopUpElement.style.display = 'none';
+            resetForm();
         });
     }
 
     if (btnClosePopUpX) {
         btnClosePopUpX.addEventListener("click", () => {
             payCoursePopUpElement.style.display = 'none';
+            resetForm();
         });
+    }
+
+    if (popupBackground) {
+        popupBackground.addEventListener('click', () => {
+            payCoursePopUpElement.style.display = 'none';
+            resetForm();
+        })
     }
 
 
