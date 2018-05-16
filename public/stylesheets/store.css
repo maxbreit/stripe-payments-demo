@@ -508,7 +508,7 @@ button.ddsco-submit-btn:active {
 }
 
 .element-errors {
-	display: inline-flex;
+	display: none;
 	margin: 0 auto;
 	padding-left: 20px;
 	color: #e25950;
@@ -522,6 +522,7 @@ button.ddsco-submit-btn:active {
 }
 
 .element-errors.visible {
+	display: inline-flex;
 	opacity: 1;
 	transform: none;
 }
@@ -712,7 +713,13 @@ button.ddsco-submit-btn:active {
 }
 
 #iban-errors {
-	margin-top: -20px;
+	margin-top: 5px;
+	font-size: 15px;
+}
+
+#card-errors {
+	margin-top: 5px;
+	font-size: 15px;
 }
 
 #ddsco-payment-error-msg {
