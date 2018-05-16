@@ -57,6 +57,8 @@ main#ddsco {
 }
 
 #ddsco-close-popup-x-btn {
+	width: 15px;
+	border: none;
 	position: absolute;
 	font-weight: 700;
 	top: -20px;
