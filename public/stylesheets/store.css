@@ -58,11 +58,16 @@ main#ddsco {
 
 #ddsco-close-popup-x-btn {
 	width: 15px;
+	height: 15px;
 	border: none;
 	position: absolute;
 	font-weight: 700;
 	top: -20px;
 	right: -15px;
+	display: block;
+	background: url(https://uploads-ssl.webflow.com/5a7f3c1838edac000186e76e/5afc61d55063d96d40e8cbd3_close_x.svg);
+	/*fill: #8898aa;*/
+	cursor: pointer;
 }
 
 #ddsco-main.checkout #checkout {
@@ -94,7 +99,7 @@ h2.ddsco-h2 {
 	text-transform: uppercase;
 	letter-spacing: 0.3px;
 	font-size: 13px;
-	font-weight: 500;
+	font-weight: 700;
 }
 
 /* Payment Request */
@@ -169,6 +174,7 @@ fieldset.ddsco-fieldset label span {
 	min-width: 75px;
 	padding: 0 15px;
 	text-align: left;
+	color: rgb(49, 50, 95);
 }
 
 fieldset.ddsco-fieldset .redirect label span {
@@ -434,6 +440,7 @@ button.ddsco-submit-btn:active {
 	display: flex;
 	flex: 1;
 	cursor: pointer;
+	font-weight: 500;
 }
 
 #payment-methods input + label {

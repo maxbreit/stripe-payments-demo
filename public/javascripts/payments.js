@@ -96,12 +96,8 @@
      * This makes it easy to collect bank account information.
      */
 
-        // Create a IBAN Element and pass the right options for styles and supported countries.
-    const ibanOptions = {
-            elementsOptions,
-            supportedCountries: ['SEPA'],
-        };
-    const iban = elements.create('iban', ibanOptions);
+    // Create a IBAN Element and pass the right options for styles and supported countries.
+    const iban = elements.create('iban', {style: elementsOptions['style'], supportedCountries: ['SEPA']});
 
     // Mount the IBAN Element on the page.
     iban.mount('#iban-element');
