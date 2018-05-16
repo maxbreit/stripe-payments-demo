@@ -63,7 +63,7 @@ main#ddsco {
 	position: absolute;
 	font-weight: 700;
 	top: -20px;
-	right: -15px;
+	right: -20px;
 	display: block;
 	background: url(https://uploads-ssl.webflow.com/5a7f3c1838edac000186e76e/5afc61d55063d96d40e8cbd3_close_x.svg);
 	/*fill: #8898aa;*/
@@ -447,8 +447,8 @@ button.ddsco-submit-btn:active {
 	position: relative;
 	padding: 5px 0;
 	text-decoration: none;
-	text-transform: uppercase;
-	font-size: 13px;
+	font-size: inherit;
+	font-weight: 500;
 }
 
 #payment-methods label::before {
