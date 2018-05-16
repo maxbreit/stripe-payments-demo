@@ -634,17 +634,9 @@
     const countrySelector = document.getElementById('country');
     countrySelector.querySelector(`option[value=${'DE'}]`).selected = 'selected';
     countrySelector.className = `ddsco-field ${'DE'}`;
-    // Create a map of the button ids and course names
-    const courseIdNameMap = new Map();
-    courseIdNameMap.set('pay-ww', 'Wiener Walzer');
-    courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-df', 'Discofox');
-    // Create references to payment trigger buttons
-    const btnWw = document.getElementById('pay-ww');
-    const btnLw = document.getElementById('pay-lw');
-    const btnDf = document.getElementById('pay-df');
     // Listen to clicks on payment trigger buttons and update the item in the order accordingly
     const inputPaymentValue = (btnEvent) => {
+        document.body.style.overflow = 'hidden';
         courseName = courseIdNameMap.get(btnEvent.target.id);
         console.log('User wants to pay for...', courseName);
         store.flushItemList();
@@ -664,9 +656,30 @@
         }
     };
 
-    if (btnDf) btnDf.onclick = inputPaymentValue;
-    if (btnLw) btnLw.onclick = inputPaymentValue;
-    if (btnWw) btnWw.onclick = inputPaymentValue;
+    // Create a map of the button ids and course names
+    const courseIdNameMap = new Map();
+    courseIdNameMap.set('pay-ww', 'Wiener Walzer');
+    courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-lw-mobile', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-df', 'Discofox');
+    courseIdNameMap.set('pay-df-mobile', 'Discofox');
+
+    const setBtnListeners = () => {
+        // Create references to payment trigger buttons
+        const btnWw = document.getElementById('pay-ww');
+        const btnLw = document.getElementById('pay-lw');
+        const btnLwMob = document.getElementById('pay-lw-mobile');
+        const btnDf = document.getElementById('pay-df');
+        const btnDfMob = document.getElementById('pay-df-mobile');
+        //set listeners
+        if (btnDf) btnDf.onclick = inputPaymentValue;
+        if (btnDfMob) btnDfMob.onclick = inputPaymentValue;
+        if (btnLw) btnLw.onclick = inputPaymentValue;
+        if (btnLwMob) btnLwMob.onclick = inputPaymentValue;
+        if (btnWw) btnWw.onclick = inputPaymentValue;
+    };
+
+    setBtnListeners();
 
     // buttons for closing the modal
     const payCoursePopUpElement = document.getElementsByClassName('pay-course')[0];
@@ -676,6 +689,7 @@
 
     if (btnClosePopUp) {
         btnClosePopUp.addEventListener("click", () => {
+            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         });
@@ -683,6 +697,7 @@
 
     if (btnClosePopUpX) {
         btnClosePopUpX.addEventListener("click", () => {
+            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         });
@@ -690,6 +705,8 @@
 
     if (popupBackground) {
         popupBackground.addEventListener('click', () => {
+            console.log('background clicked');
+            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         })
