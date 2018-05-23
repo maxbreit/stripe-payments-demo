@@ -732,89 +732,7 @@ button.ddsco-submit-btn:active {
 	text-align: center;
 }
 
-/*#confirmation {*/
-/*display: flex;*/
-/*align-items: center;*/
-/*position: absolute;*/
-/*top: 5px;*/
-/*left: 5px;*/
-/*right: 5px;*/
-/*bottom: 5px;*/
-/*visibility: hidden;*/
-/*overflow-x: hidden;*/
-/*opacity: 0;*/
-/*background: white;*/
-/*text-align: left;*/
-/*transition: visibility 0s, opacity 0.5s linear 0.5s;*/
-/*}*/
-
-/*#ddsco-main.success #confirmation,*/
-/*#ddsco-main.error #confirmation {*/
-/*visibility: visible;*/
-/*opacity: 1;*/
-/*}*/
-
-/*#ddsco-main.success #order,*/
-/*#ddsco-main.error #order {*/
-/*visibility: hidden;*/
-/*opacity: 0;*/
-/*}*/
-
-/*#confirmation h1 {*/
-/*font-size: 25px;*/
-/*font-weight: 700;*/
-/*margin-bottom: 30px;*/
-/*}*/
-
-/*#confirmation .status {*/
-/*display: flex;*/
-/*justify-content: center;*/
-/*flex-direction: column;*/
-/*padding: 25px;*/
-/*!*max-width: 90%;*!*/
-/*!*height: 350px;*!*/
-/*!*background: #fff url(/images/order.svg) 75px center no-repeat;*!*/
-/*!*box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15);*!*/
-/*!*border-radius: 6px;*!*/
-/*}*/
-
-/*#confirmation .status.error {*/
-/*display: none;*/
-/*}*/
-
-/*#confirmation .status p {*/
-/*margin: 0 0 15px;*/
-/*}*/
-
-/*#confirmation .status li {*/
-/*margin-bottom: 5px;*/
-/*list-style: none;*/
-/*}*/
-
-/*#ddsco-main.success:not(.processing) #confirmation .status.processing {*/
-/*display: none;*/
-/*}*/
-
-/*#ddsco-main.processing #confirmation .status.success{*/
-/*display: none;*/
-/*}*/
-
-/*#ddsco-main.error #confirmation .status.success,*/
-/*#ddsco-main.error #confirmation .status.processing{*/
-/*display: none;*/
-/*}*/
-
-/*#ddsco-main.error #confirmation .status.error {*/
-/*display: flex;*/
-/*}*/
-
-/* Media Queries */
-
 @media only screen and (max-width: 1024px) {
-	#ddsco-main.checkout:not(.success):not(.error) {
-		width: calc(100% - 320px);
-	}
-
 	#summary {
 		width: 320px;
 		right: -320px;
@@ -843,6 +761,17 @@ button.ddsco-submit-btn:active {
 		width: 100%;
 	}
 
+	#card-errors, #iban-errors {
+		font-size: 10px;
+		font-weight: 400;
+	}
+
+	.element-errors {
+		padding-left: 0;
+		background: none;
+		background-size: 0;
+	}
+
 	#payment-request {
 		padding-top: 0;
 		min-height: 80px;
@@ -857,9 +786,30 @@ button.ddsco-submit-btn:active {
 		height: auto;
 		margin: 30px;
 	}
+
+	#ddsco-close-popup-x-btn {
+		top: -10px;
+		right: -10px;
+	}
 }
 
 @media only screen and (max-width: 500px) {
+	#ddsco-close-popup-x-btn {
+		top: -10px;
+		right: 0;
+		width: 12px;
+		height: 12px;
+	}
+
+	#ddsco-course-title {
+		font-size: 20px;
+	}
+
+	#payment-methods label {
+		font-size: 15px !important;
+	}
+
+
 	header {
 		height: 60px;
 		background-size: 40px 40px;
@@ -918,7 +868,6 @@ button.ddsco-submit-btn:active {
 		width: auto;
 		height: auto;
 		padding: 15px;
-		/*background: #fff url(/images/order.svg) center 15px no-repeat;*/
 		background-size: 68px 86px;
 		box-shadow: 0 1px 3px 0 rgba(50, 50, 93, 0.15);
 		border-radius: 6px;
