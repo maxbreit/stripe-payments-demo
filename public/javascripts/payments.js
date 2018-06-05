@@ -28,8 +28,8 @@
      * Setup Stripe Elements.
      */
 
-    // Create a Stripe client.
-    // const stripe = Stripe(config.stripePublishableKey);
+        // Create a Stripe client.
+        // const stripe = Stripe(config.stripePublishableKey);
     const stripe = Stripe('pk_test_CiXf29IdSdWEmeZGORUfnSFc');
 
     // Create an instance of Elements.
@@ -96,7 +96,7 @@
      * This makes it easy to collect bank account information.
      */
 
-    // Create a IBAN Element and pass the right options for styles and supported countries.
+        // Create a IBAN Element and pass the right options for styles and supported countries.
     const iban = elements.create('iban', {style: elementsOptions['style'], supportedCountries: ['SEPA']});
 
     // Mount the IBAN Element on the page.
@@ -148,7 +148,6 @@
         // payment() is called when the button is clicked
         payment: function (data, actions) {
             if (!amount) return;
-            console.log('Payment with PayPal of', amount / 100);
             // Make a call to the REST api to create the payment
             return actions.payment.create({
                 payment: {
@@ -181,10 +180,8 @@
 
         // onAuthorize() is called when the buyer approves the payment
         onAuthorize: function (data, actions) {
-            console.log('buyer approved the payment');
             // Make a call to the REST api to execute the payment
             return actions.payment.execute().then(function () {
-                console.log('showing confirmation screen');
                 showConfirmationScreen();
             });
         },
@@ -195,7 +192,6 @@
             /*
              * Buyer cancelled the payment
              */
-            console.log('Buyer cancelled the payment')
         },
         // called when an error occurs
         // You can allow the buyer to re-try or show an error message
@@ -203,12 +199,10 @@
             /*
              * An error occurred during the transaction
              */
-            console.log('An error occurred during the transaction')
             showErrorScreen(err.message);
         },
         // called for every click on the PayPal button
         onClick: function () {
-            console.log('PayPal button clicked');
         }
 
     }, '#paypal-button-container');
@@ -239,7 +233,6 @@
     // Submit handler for our payment form.
     form.addEventListener('submit', async event => {
         event.preventDefault();
-        console.log('submitting form...')
 
         // Retrieve the user information from the form.
         const payment = form.querySelector('input[name=payment]:checked').value;
@@ -256,9 +249,6 @@
             store.getOrderItems(),
             email
         );
-
-        console.log('created order', order);
-        console.log('payment', payment);
 
         if (payment === 'card') {
             // Create a Stripe source from the card information and the owner name.
@@ -409,24 +399,19 @@
 
     // Handle the order and source activation if required
     const handleOrder = async (order, source) => {
-        console.log('handling order', order, source);
         switch (order.metadata.status) {
             case 'created':
-                console.log('order created...')
                 switch (source.status) {
                     case 'chargeable':
-                        console.log('case chargeable...')
                         submitButton.textContent = 'Zahlungsvorgang läuft…';
                         const response = await store.payOrder(order, source);
                         await handleOrder(response.order, response.source);
                         break;
                     case 'pending':
-                        console.log('case pending...')
                         switch (source.flow) {
                             case 'none':
                                 // Normally, sources with a `flow` value of `none` are chargeable right away,
                                 // but there are exceptions, for instance for WeChat QR codes just below.
-                                console.log('Unhandled none flow.', source);
                                 break;
                             case 'redirect':
                                 // Immediately redirect the customer.
@@ -442,7 +427,6 @@
                         }
                         break;
                     case 'failed':
-                        console.log('case failed...');
                         break;
                     case 'canceled':
                         // Authentication failed, offer to select another payment method.
@@ -454,17 +438,14 @@
                 break;
 
             case 'pending':
-                console.log('order pending...')
                 showConfirmationScreen();
                 break;
 
             case 'failed':
-                console.log('order failed with message', order.metadata.errorMessage);
                 showErrorScreen(order.metadata.errorMessage);
                 break;
 
             case 'paid':
-                console.log('order paid!');
                 showConfirmationScreen();
                 break;
         }
@@ -632,9 +613,11 @@
     countrySelector.className = `ddsco-field ${'DE'}`;
     // Listen to clicks on payment trigger buttons and update the item in the order accordingly
     const inputPaymentValue = (btnEvent) => {
-        document.body.style.overflow = 'hidden';
         courseName = courseIdNameMap.get(btnEvent.target.id);
-        console.log('User wants to pay for...', courseName);
+        displaySelectedCourse();
+    };
+
+    const displaySelectedCourse = () => {
         store.flushItemList();
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
@@ -650,14 +633,17 @@
                 break;
             }
         }
-    };
+    }
 
     // Create a map of the button ids and course names
     const courseIdNameMap = new Map();
     courseIdNameMap.set('pay-ww', 'Wiener Walzer');
+    courseIdNameMap.set('checkout-wiener-walzer', 'Wiener Walzer');
     courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
+    courseIdNameMap.set('checkout-langsamer-walzer', 'Langsamer Walzer');
     courseIdNameMap.set('pay-lw-mobile', 'Langsamer Walzer');
     courseIdNameMap.set('pay-df', 'Discofox');
+    courseIdNameMap.set('checkout-discofox', 'Discofox');
     courseIdNameMap.set('pay-df-mobile', 'Discofox');
 
     const setBtnListeners = () => {
@@ -685,7 +671,6 @@
 
     if (btnClosePopUp) {
         btnClosePopUp.addEventListener("click", () => {
-            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         });
@@ -693,7 +678,6 @@
 
     if (btnClosePopUpX) {
         btnClosePopUpX.addEventListener("click", () => {
-            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         });
@@ -701,13 +685,20 @@
 
     if (popupBackground) {
         popupBackground.addEventListener('click', () => {
-            console.log('background clicked');
-            document.body.style.overflow = 'auto';
             payCoursePopUpElement.style.display = 'none';
             resetForm();
         })
     }
 
+    const readUrl = () => {
+        let courseKey = location.href.substr(location.href.lastIndexOf('/') + 1);
+        if (courseKey) {
+            courseName = courseIdNameMap.get(courseKey);
+            displaySelectedCourse();
+        }
+    };
+
+    window.onload = readUrl;
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();
