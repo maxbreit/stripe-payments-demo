@@ -339,7 +339,11 @@
         // Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         mainElement.classList.add('success');
-        document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        if (isMobile) {
+            document.getElementById('ddsco-redirect-home-btn').style.display = 'initial';
+        } else {
+            document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        }
         document.getElementById('ddsco-confirmation').style.display = 'initial';
     };
 
@@ -380,7 +384,11 @@
         // display the failure reasure
         document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
         // display the button for closing the pop-up
-        document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        if (isMobile) {
+            document.getElementById('ddsco-redirect-home-btn').style.display = 'initial';
+        } else {
+            document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+        }
         // update CSS classes
         mainElement.classList.remove('success');
         mainElement.classList.remove('processing');
@@ -394,7 +402,11 @@
         mainElement.classList.remove('error');
         mainElement.classList.add('checkout');
         // hide the button for closing the pop-up
-        document.getElementById('ddsco-close-popup-btn').style.display = 'none';
+        if (isMobile) {
+            document.getElementById('ddsco-redirect-home-btn').display = 'none';
+        } else {
+            document.getElementById('ddsco-close-popup-btn').style.display = 'none';
+        }
         document.getElementById('payment-form').style.display = 'initial';
         document.getElementById('ddsco-course-title').style.display = 'initial';
         document.getElementById('card-errors').style.display = 'initial';
@@ -718,14 +730,8 @@
 
     document.onreadystatechange = () => {
         if (document.readyState === 'complete') {
-            isMobile = window.matchMedia("only screen and (max-width: 760px)");
-            console.log('isMobile', isMobile.matches);
-            let embedElem = document.getElementsByClassName('w-embed')[0];
-            if (isMobile.matches) {
-                mainElement.style.display = 'initial';
-                embedElem.style.visibility = 'visible';
-                embedElem.style.display = 'block';
-            }
+            isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
+            console.log('isMobile', isMobile);
         }
     };
 

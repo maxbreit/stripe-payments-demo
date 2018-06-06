@@ -621,8 +621,7 @@ section.sct-agbs > a {
 }
 
 @media only screen and (max-width: 768px) {
-	#ddsco-main {
-		display: none;
+	#checkout {
 		padding-top: 30px;
 	}
 
