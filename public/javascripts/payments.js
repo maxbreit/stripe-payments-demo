@@ -19,10 +19,23 @@
 
     let amount = 0;
     let courseName = '';
+    let isMobile = false;
 
     // Create references to the main form and its submit button.
     const form = document.getElementById('payment-form');
     const submitButton = form.querySelector('button[type=submit]');
+
+    /* Google analytics */
+    const trackCourseBuy = () => {
+        ga('send', {
+            hitType: 'event',
+            eventCategory: 'kurs',
+            eventAction: 'gekauft',
+            eventLabel: courseName,
+            eventValue: amount / 100
+        });
+        console.log('tracked event with GA');
+    };
 
     /**
      * Setup Stripe Elements.
@@ -183,6 +196,7 @@
             // Make a call to the REST api to execute the payment
             return actions.payment.execute().then(function () {
                 showConfirmationScreen();
+                trackCourseBuy();
             });
         },
         // called if the buyer cancels the payment
@@ -439,6 +453,7 @@
 
             case 'pending':
                 showConfirmationScreen();
+                trackCourseBuy();
                 break;
 
             case 'failed':
@@ -447,6 +462,7 @@
 
             case 'paid':
                 showConfirmationScreen();
+                trackCourseBuy();
                 break;
         }
     };
@@ -692,13 +708,26 @@
 
     const readUrl = () => {
         let courseKey = location.href.substr(location.href.lastIndexOf('/') + 1);
-        if (courseKey) {
-            courseName = courseIdNameMap.get(courseKey);
+        courseName = courseIdNameMap.get(courseKey);
+        if (courseName) {
             displaySelectedCourse();
         }
     };
 
     window.onload = readUrl;
+
+    document.onreadystatechange = () => {
+        if (document.readyState === 'complete') {
+            isMobile = window.matchMedia("only screen and (max-width: 760px)");
+            console.log('isMobile', isMobile.matches);
+            let embedElem = document.getElementsByClassName('w-embed')[0];
+            if (isMobile.matches) {
+                mainElement.style.display = 'initial';
+                embedElem.style.visibility = 'visible';
+                embedElem.style.display = 'block';
+            }
+        }
+    };
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();

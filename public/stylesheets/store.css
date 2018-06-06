@@ -40,10 +40,6 @@ main#ddsco {
 	color: inherit;
 }
 
-#ddsco-main.checkout:not(.success):not(.error) {
-	/*width: calc(100% - 450px);*/
-}
-
 /* Checkout */
 
 #checkout {
@@ -62,11 +58,10 @@ main#ddsco {
 	border: none;
 	position: absolute;
 	font-weight: 700;
-	top: -20px;
-	right: -20px;
+	top: -13px;
+	right: -13px;
 	display: block;
 	background: url(https://uploads-ssl.webflow.com/5a7f3c1838edac000186e76e/5b06eac31e622940af058819_x-button.svg);
-	/*fill: #8898aa;*/
 	cursor: pointer;
 }
 
@@ -627,6 +622,7 @@ section.sct-agbs > a {
 
 @media only screen and (max-width: 768px) {
 	#ddsco-main {
+		display: none;
 		padding-top: 30px;
 	}
 
