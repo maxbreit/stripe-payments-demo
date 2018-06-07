@@ -14,8 +14,7 @@
     'use strict';
 
     // Retrieve the configuration for the store.
-    // const config = await store.getConfig();
-    // const config = require('../config');
+    const config = await store.getConfig();
 
     let amount = 0;
     let courseName = '';
@@ -42,8 +41,7 @@
      */
 
         // Create a Stripe client.
-        // const stripe = Stripe(config.stripePublishableKey);
-    const stripe = Stripe('pk_test_CiXf29IdSdWEmeZGORUfnSFc');
+    const stripe = Stripe(config.stripe.publishableKey);
 
     // Create an instance of Elements.
     const elements = stripe.elements();
@@ -695,6 +693,11 @@
             }
         }
     }
+
+    // clicking on the agbs checkbox text ticks the checkbox
+    document.getElementById('ddsco-agbs-text').onclick = () => {
+        document.getElementById('ddsco-agbs').checked = !document.getElementById('ddsco-agbs').checked;
+    };
 
     // Create a map of the button ids and course names
     const courseIdNameMap = new Map();
