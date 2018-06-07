@@ -18,6 +18,7 @@ class Store {
     // Add the item with the specified name to the list of line items
     addItemToList(name) {
         if (!this.products) return;
+        console.log(this.products);
         if (!this.products[name]) throw `${name} is not a known product!`;
         let product = this.products[name];
         let sku = product.skus.data[0];
