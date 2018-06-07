@@ -88,6 +88,7 @@ class Store {
                     currency,
                     items,
                     email,
+                    shipping
                 }),
             });
             const data = await response.json();

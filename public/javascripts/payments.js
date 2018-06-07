@@ -287,7 +287,8 @@
         const order = await store.createOrder(
             'eur',
             store.getOrderItems(),
-            email
+            email,
+            {'name': name}
         );
 
         if (payment === 'card') {
