@@ -287,8 +287,7 @@
         const order = await store.createOrder(
             'eur',
             store.getOrderItems(),
-            email,
-            {'name': name}
+            email
         );
 
         if (payment === 'card') {
@@ -297,6 +296,9 @@
                 owner: {
                     name,
                 },
+                metadata: {
+                    course: courseName,
+                }
             });
             await handleOrder(order, source);
         } else if (payment === 'sepa_debit') {
@@ -313,6 +315,9 @@
                     // once the source is charged.
                     notification_method: 'email',
                 },
+                metadata: {
+                    course: courseName,
+                }
             };
             const {source} = await stripe.createSource(iban, sourceData);
             await handleOrder(order, source);
@@ -332,6 +337,7 @@
                 statement_descriptor: 'Doodance Stripe Payments',
                 metadata: {
                     order: order.id,
+                    course: courseName,
                 },
             };
 
@@ -458,7 +464,6 @@
 
     // Handle the order and source activation if required
     const handleOrder = async (order, source) => {
-        console.log(order);
         switch (order.metadata.status) {
             case 'created':
                 switch (source.status) {
