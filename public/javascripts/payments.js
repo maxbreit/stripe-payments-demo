@@ -415,13 +415,12 @@
         document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
         // display the button for closing the pop-up
         if (isMobile) {
-            document.getElementById('ddsco-redirect-home-btn').value = 'Zurück zum Checkout';
-            document.getElementById('ddsco-redirect-home-btn').style.display = 'initial';
+            document.getElementById('ddsco-redirect-home-btn').textContent = 'Zurück zum Checkout';
+            document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
             document.getElementById('ddsco-redirect-home-btn').onclick = resetForm;
         } else {
-            document.getElementById('ddsco-close-popup-btn').value = 'Zurück zum Checkout';
-            document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
-            document.getElementById('ddsco-close-popup-btn').onclick = window.history.back;
+            document.getElementById('ddsco-close-popup-btn').textContent = 'Zurück zum Checkout';
+            document.getElementById('ddsco-close-popup-btn').style.display = 'block';
         }
         // update CSS classes
         mainElement.classList.remove('success');
@@ -441,12 +440,12 @@
         } else {
             document.getElementById('ddsco-close-popup-btn').style.display = 'none';
         }
-        document.getElementById('payment-form').style.display = 'initial';
-        document.getElementById('ddsco-course-title').style.display = 'initial';
-        document.getElementById('card-errors').style.display = 'initial';
-        document.getElementById('iban-errors').style.display = 'initial';
+        document.getElementById('payment-form').style.display = 'block';
+        document.getElementById('ddsco-course-title').style.display = 'block';
+        document.getElementById('card-errors').style.display = 'none';
+        document.getElementById('iban-errors').style.display = 'none';
         // show PayPal button
-        document.getElementById('paypal-button-container').style.display = 'initial';
+        document.getElementById('paypal-button-container').style.display = 'block';
         // hide confirmation
         document.getElementById('ddsco-confirmation').style.display = 'none';
         document.getElementById('ddsco-payment-error-msg').innerText = '';
@@ -733,7 +732,6 @@
 
     if (btnClosePopUp) {
         btnClosePopUp.addEventListener("click", () => {
-            payCoursePopUpElement.style.display = 'none';
             resetForm();
         });
     }
