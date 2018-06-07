@@ -629,12 +629,19 @@ section.sct-agbs > a {
 		display: none;
 	}
 
+	#ddsco-main.checkout.success > div#checkout {
+		padding: 15px;
+	}
+
+	#ddsco-main.checkout.error > div#checkout {
+		padding: 15px;
+	}
+
 	#ddsco-main.checkout:not(.success):not(.error) {
 		width: 100%;
 	}
 
 	#card-errors, #iban-errors {
-		font-size: 10px;
 		font-weight: 400;
 	}
 
@@ -680,7 +687,6 @@ section.sct-agbs > a {
 	#payment-methods label {
 		font-size: 15px !important;
 	}
-
 
 	header {
 		height: 60px;

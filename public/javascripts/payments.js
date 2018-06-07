@@ -135,6 +135,28 @@
      * Implement a PayPal Checkout button.
      *
      */
+    const isAgbsChecked = () => {
+        return document.getElementById('ddsco-agbs').checked;
+    };
+
+    const toggleButton = (actions) => {
+        return isAgbsChecked() && amount ? actions.enable() : actions.disable();
+    };
+
+    function toggleValidationMessage() {
+        if (!form.checkValidity()) {
+            // Create the temporary button, click and remove it
+            const tmpSubmit = document.createElement('button');
+            form.appendChild(tmpSubmit);
+            tmpSubmit.click();
+            form.removeChild(tmpSubmit);
+        }
+    }
+
+    function onChangeCheckbox(handler) {
+        document.getElementById('ddsco-agbs').addEventListener('change', handler);
+    }
+
     paypal.Button.render({
 
         env: 'sandbox', // sandbox | production
@@ -158,9 +180,16 @@
         // Show the buyer a 'Pay Now' button in the checkout flow
         commit: true,
 
+        validate: function (actions) {
+            toggleButton(actions);
+
+            onChangeCheckbox(function () {
+                toggleButton(actions);
+            });
+        },
+
         // payment() is called when the button is clicked
         payment: function (data, actions) {
-            if (!amount) return;
             // Make a call to the REST api to create the payment
             return actions.payment.create({
                 payment: {
@@ -217,6 +246,7 @@
         },
         // called for every click on the PayPal button
         onClick: function () {
+            toggleValidationMessage();
         }
 
     }, '#paypal-button-container');
@@ -385,9 +415,13 @@
         document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
         // display the button for closing the pop-up
         if (isMobile) {
+            document.getElementById('ddsco-redirect-home-btn').value = 'Zurück zum Checkout';
             document.getElementById('ddsco-redirect-home-btn').style.display = 'initial';
+            document.getElementById('ddsco-redirect-home-btn').onclick = resetForm;
         } else {
+            document.getElementById('ddsco-close-popup-btn').value = 'Zurück zum Checkout';
             document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+            document.getElementById('ddsco-close-popup-btn').onclick = window.history.back;
         }
         // update CSS classes
         mainElement.classList.remove('success');
@@ -719,14 +753,12 @@
     }
 
     const readUrl = () => {
-        let courseKey = location.href.substr(location.href.lastIndexOf('/') + 1);
+        let courseKey = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
         courseName = courseIdNameMap.get(courseKey);
         if (courseName) {
             displaySelectedCourse();
         }
     };
-
-    window.onload = readUrl;
 
     document.onreadystatechange = () => {
         if (document.readyState === 'complete') {
@@ -737,4 +769,5 @@
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();
+    readUrl();
 })();
