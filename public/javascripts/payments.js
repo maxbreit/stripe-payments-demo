@@ -15,6 +15,7 @@
 
     // Retrieve the configuration for the store.
     const config = await store.getConfig();
+    console.log(config);
 
     let amount = 0;
     let courseName = '';
