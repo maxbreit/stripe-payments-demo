@@ -275,6 +275,7 @@ router.get('/orders/:id', async (req, res) => {
 router.get('/products', async (req, res) => {
   console.log('got req in /products');
   const productList = await products.list();
+  console.log(productList);
   res.json(productList);
 });
 
