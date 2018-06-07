@@ -458,6 +458,7 @@
 
     // Handle the order and source activation if required
     const handleOrder = async (order, source) => {
+        console.log(order);
         switch (order.metadata.status) {
             case 'created':
                 switch (source.status) {
