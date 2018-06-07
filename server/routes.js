@@ -252,8 +252,6 @@ const dynamic3DS = async (source, order, req) => {
 
 // Expose the Stripe publishable key and other pieces of config via an endpoint.
 router.get('/config', (req, res) => {
-  console.log('fetching config')
-    console.log(config.stripe.country);
   res.json({
     stripePublishableKey: config.stripe.publishableKey,
     stripeCountry: config.stripe.country,
@@ -273,9 +271,7 @@ router.get('/orders/:id', async (req, res) => {
 
 // Retrieve all products.
 router.get('/products', async (req, res) => {
-  console.log('got req in /products');
   const productList = await products.list();
-  console.log(productList);
   res.json(productList);
 });
 

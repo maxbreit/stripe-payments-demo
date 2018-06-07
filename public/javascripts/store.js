@@ -18,7 +18,6 @@ class Store {
     // Add the item with the specified name to the list of line items
     addItemToList(name) {
         if (!this.products) return;
-        console.log(this.products);
         if (!this.products[name]) throw `${name} is not a known product!`;
         let product = this.products[name];
         let sku = product.skus.data[0];
@@ -66,7 +65,6 @@ class Store {
     async getConfig() {
         try {
             const response = await fetch(`${this.urlPrefix}/config`, {mode: 'cors'});
-            console.log(response);
             return await response.json();
         } catch (err) {
             return {error: err.message};

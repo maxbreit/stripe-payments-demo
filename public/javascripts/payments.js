@@ -15,7 +15,6 @@
 
     // Retrieve the configuration for the store.
     const config = await store.getConfig();
-    console.log(config);
 
     let amount = 0;
     let courseName = '';
@@ -34,7 +33,6 @@
             eventLabel: courseName,
             eventValue: amount / 100
         });
-        console.log('tracked event with GA');
     };
 
     /**
@@ -369,9 +367,12 @@
         mainElement.classList.remove('processing');
         mainElement.classList.add('success');
         if (isMobile) {
-            document.getElementById('ddsco-redirect-home-btn').style.display = 'initial';
+            document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
         } else {
-            document.getElementById('ddsco-close-popup-btn').style.display = 'initial';
+            document.getElementById('ddsco-close-popup-btn').style.display = 'block';
+            document.getElementById('ddsco-close-popup-btn').onclick = () => {
+                payCoursePopUpElement.style.display = 'none';
+            };
         }
         document.getElementById('ddsco-confirmation').style.display = 'initial';
     };
@@ -765,7 +766,6 @@
     document.onreadystatechange = () => {
         if (document.readyState === 'complete') {
             isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
-            console.log('isMobile', isMobile);
         }
     };
 

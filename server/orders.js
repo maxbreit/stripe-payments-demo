@@ -48,7 +48,6 @@ const retrieveProduct = async productId => {
 
 // Validate that products exist.
 const checkProducts = productList => {
-  console.log('product list is always valid');
   return true;
   const validProducts = ['Langsamer Walzer', 'Wiener Walzer', 'Discofox'];
   return productList.data.reduce((accumulator, currentValue) => {
