@@ -156,8 +156,8 @@
 
     paypal.Button.render({
 
-        env: 'sandbox', // sandbox | production
-        locale: 'en_DE',
+        env: 'production', // sandbox | production
+        locale: 'de_DE',
 
         // PayPal Client IDs - replace with your own
         // Create a PayPal app: https://developer.paypal.com/developer/applications/create
