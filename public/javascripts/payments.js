@@ -724,11 +724,23 @@
     // Create a map of the button ids and course names
     const courseIdNameMap = new Map();
     courseIdNameMap.set('pay-ww', 'Wiener Walzer');
+    courseIdNameMap.set('pay-ww-2', 'Wiener Walzer');
+    courseIdNameMap.set('pay-ww-3', 'Wiener Walzer');
+    courseIdNameMap.set('pay-ww-4', 'Wiener Walzer');
+    courseIdNameMap.set('pay-ww-5', 'Wiener Walzer');
     courseIdNameMap.set('checkout-wiener-walzer', 'Wiener Walzer');
     courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-lw-2', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-lw-3', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-lw-4', 'Langsamer Walzer');
+    courseIdNameMap.set('pay-lw-5', 'Langsamer Walzer');
     courseIdNameMap.set('checkout-langsamer-walzer', 'Langsamer Walzer');
     courseIdNameMap.set('pay-lw-mobile', 'Langsamer Walzer');
     courseIdNameMap.set('pay-df', 'Discofox');
+    courseIdNameMap.set('pay-df-2', 'Discofox');
+    courseIdNameMap.set('pay-df-3', 'Discofox');
+    courseIdNameMap.set('pay-df-4', 'Discofox');
+    courseIdNameMap.set('pay-df-5', 'Discofox');
     courseIdNameMap.set('checkout-discofox', 'Discofox');
     courseIdNameMap.set('pay-df-mobile', 'Discofox');
 
