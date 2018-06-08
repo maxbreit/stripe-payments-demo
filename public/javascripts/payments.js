@@ -18,7 +18,9 @@
 
     let amount = 0;
     let courseName = '';
-    let isMobile = false;
+    let isMobile = () => {
+        return window.matchMedia("only screen and (max-width: 760px)").matches;
+    };
 
     // Create references to the main form and its submit button.
     const form = document.getElementById('payment-form');
@@ -372,7 +374,7 @@
         // Update the interface to display the confirmation screen.
         mainElement.classList.remove('processing');
         mainElement.classList.add('success');
-        if (isMobile) {
+        if (isMobile()) {
             document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
         } else {
             document.getElementById('ddsco-close-popup-btn').style.display = 'block';
@@ -420,7 +422,7 @@
         // display the failure reasure
         document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
         // display the button for closing the pop-up
-        if (isMobile) {
+        if (isMobile()) {
             document.getElementById('ddsco-redirect-home-btn').textContent = 'Zurück zum Checkout';
             document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
             document.getElementById('ddsco-redirect-home-btn').onclick = resetForm;
@@ -441,7 +443,7 @@
         mainElement.classList.remove('error');
         mainElement.classList.add('checkout');
         // hide the button for closing the pop-up
-        if (isMobile) {
+        if (isMobile()) {
             document.getElementById('ddsco-redirect-home-btn').display = 'none';
         } else {
             document.getElementById('ddsco-close-popup-btn').style.display = 'none';
@@ -766,12 +768,6 @@
         courseName = courseIdNameMap.get(courseKey);
         if (courseName) {
             displaySelectedCourse();
-        }
-    };
-
-    document.onreadystatechange = () => {
-        if (document.readyState === 'complete') {
-            isMobile = window.matchMedia("only screen and (max-width: 760px)").matches;
         }
     };
 
