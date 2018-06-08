@@ -616,7 +616,7 @@ section.sct-agbs a {
 
 @media only screen and (max-width: 768px) {
 	#checkout {
-		padding-top: 30px;
+		padding: 30px 0;
 	}
 
 	#ddsco-close-popup-x-btn {
