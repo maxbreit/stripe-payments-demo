@@ -615,11 +615,6 @@ section.sct-agbs a {
 }
 
 @media only screen and (max-width: 768px) {
-
-	#ddsco-close-popup-x-btn {
-		display: none;
-	}
-
 	#ddsco-main.checkout.success > div#checkout {
 		padding: 15px;
 	}
@@ -661,11 +656,14 @@ section.sct-agbs a {
 
 @media only screen and (max-width: 500px) {
 	#ddsco-close-popup-x-btn {
-		top: -10px;
-		right: 0;
-		width: 12px;
-		height: 12px;
+		display: none;
 	}
+	/*#ddsco-close-popup-x-btn {*/
+		/*top: -10px;*/
+		/*right: 0;*/
+		/*width: 12px;*/
+		/*height: 12px;*/
+	/*}*/
 
 	#ddsco-course-title {
 		font-size: 20px;
