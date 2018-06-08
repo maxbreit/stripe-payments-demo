@@ -734,17 +734,69 @@
 
     const setBtnListeners = () => {
         // Create references to payment trigger buttons
+        //wiener walzer
         const btnWw = document.getElementById('pay-ww');
-        const btnLw = document.getElementById('pay-lw');
-        const btnLwMob = document.getElementById('pay-lw-mobile');
-        const btnDf = document.getElementById('pay-df');
-        const btnDfMob = document.getElementById('pay-df-mobile');
-        //set listeners
-        if (btnDf) btnDf.onclick = inputPaymentValue;
-        if (btnDfMob) btnDfMob.onclick = inputPaymentValue;
-        if (btnLw) btnLw.onclick = inputPaymentValue;
-        if (btnLwMob) btnLwMob.onclick = inputPaymentValue;
+        const btnWw2 = document.getElementById('pay-ww-2');
+        const btnWw3 = document.getElementById('pay-ww-3');
+        const btnWw4 = document.getElementById('pay-ww-4');
+        const btnWw5 = document.getElementById('pay-ww-5');
+        const btnWwMob = document.getElementById('pay-ww-mobile');
+        const btnWwMob2 = document.getElementById('pay-ww-mobile-2');
+        const btnWwMob3 = document.getElementById('pay-ww-mobile-3');
+        const btnWwMob4 = document.getElementById('pay-ww-mobile-4');
+        const btnWwMob5 = document.getElementById('pay-ww-mobile-5');
         if (btnWw) btnWw.onclick = inputPaymentValue;
+        if (btnWw2) btnWw2.onclick = inputPaymentValue;
+        if (btnWw3) btnWw3.onclick = inputPaymentValue;
+        if (btnWw4) btnWw4.onclick = inputPaymentValue;
+        if (btnWw5) btnWw5.onclick = inputPaymentValue;
+        if (btnWwMob) btnWwMob.onclick = inputPaymentValue;
+        if (btnWwMob2) btnWwMob2.onclick = inputPaymentValue;
+        if (btnWwMob3) btnWwMob3.onclick = inputPaymentValue;
+        if (btnWwMob4) btnWwMob4.onclick = inputPaymentValue;
+        if (btnWwMob5) btnWwMob5.onclick = inputPaymentValue;
+        //langsamer walzer
+        const btnLw = document.getElementById('pay-lw');
+        const btnLw2 = document.getElementById('pay-lw-2');
+        const btnLw3 = document.getElementById('pay-lw-3');
+        const btnLw4 = document.getElementById('pay-lw-4');
+        const btnLw5 = document.getElementById('pay-lw-5');
+        const btnLwMob = document.getElementById('pay-lw-mobile');
+        const btnLwMob2 = document.getElementById('pay-lw-mobile-2');
+        const btnLwMob3 = document.getElementById('pay-lw-mobile-3');
+        const btnLwMob4 = document.getElementById('pay-lw-mobile-4');
+        const btnLwMob5 = document.getElementById('pay-lw-mobile-5');
+        if (btnLw) btnLw.onclick = inputPaymentValue;
+        if (btnLw2) btnLw3.onclick = inputPaymentValue;
+        if (btnLw3) btnLw3.onclick = inputPaymentValue;
+        if (btnLw4) btnLw4.onclick = inputPaymentValue;
+        if (btnLw5) btnLw5.onclick = inputPaymentValue;
+        if (btnLwMob) btnLwMob.onclick = inputPaymentValue;
+        if (btnLwMob2) btnLwMob2.onclick = inputPaymentValue;
+        if (btnLwMob3) btnLwMob3.onclick = inputPaymentValue;
+        if (btnLwMob4) btnLwMob4.onclick = inputPaymentValue;
+        if (btnLwMob5) btnLwMob5.onclick = inputPaymentValue;
+        //discofox
+        const btnDf = document.getElementById('pay-df');
+        const btnDf2 = document.getElementById('pay-df-2');
+        const btnDf3 = document.getElementById('pay-df-3');
+        const btnDf4 = document.getElementById('pay-df-4');
+        const btnDf5 = document.getElementById('pay-df-5');
+        const btnDfMob = document.getElementById('pay-df-mobile');
+        const btnDfMob2 = document.getElementById('pay-df-mobile-2');
+        const btnDfMob3 = document.getElementById('pay-df-mobile-3');
+        const btnDfMob4 = document.getElementById('pay-df-mobile-4');
+        const btnDfMob5 = document.getElementById('pay-df-mobile-5');
+        if (btnDf) btnDf.onclick = inputPaymentValue;
+        if (btnDf2) btnDf2.onclick = inputPaymentValue;
+        if (btnDf3) btnDf3.onclick = inputPaymentValue;
+        if (btnDf4) btnDf4.onclick = inputPaymentValue;
+        if (btnDf5) btnDf5.onclick = inputPaymentValue;
+        if (btnDfMob) btnDfMob.onclick = inputPaymentValue;
+        if (btnDfMob2) btnDfMob2.onclick = inputPaymentValue;
+        if (btnDfMob3) btnDfMob3.onclick = inputPaymentValue;
+        if (btnDfMob4) btnDfMob4.onclick = inputPaymentValue;
+        if (btnDfMob5) btnDfMob5.onclick = inputPaymentValue;
     };
 
     setBtnListeners();
