@@ -89,7 +89,7 @@ h1.ddsco-h1 {
 }
 
 h2.ddsco-h2 {
-	margin: 15px 0;
+	margin: 20px 0;
 	color: #32325d;
 	text-transform: uppercase;
 	letter-spacing: 0.3px;
@@ -524,7 +524,7 @@ button.ddsco-submit-btn:active {
 
 section.sct-agbs {
 	text-align: left;
-	margin-bottom: 15px;
+	margin-bottom: 5px;
 	/*display: flex;*/
 }
 
@@ -616,7 +616,7 @@ section.sct-agbs a {
 
 @media only screen and (max-width: 768px) {
 	#checkout {
-		padding: 30px 0;
+		padding: 20px 0;
 	}
 
 	#ddsco-close-popup-x-btn {
