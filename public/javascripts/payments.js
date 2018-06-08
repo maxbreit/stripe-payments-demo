@@ -31,7 +31,7 @@
         ga('send', {
             hitType: 'event',
             eventCategory: 'kurs',
-            eventAction: 'gekauft',
+            eventAction: 'checkout_success',
             eventLabel: courseName,
             eventValue: amount / 100
         });
@@ -406,6 +406,12 @@
     };
 
     const showErrorScreen = (failureMessage) => {
+        ga('send', {
+            hitType: 'event',
+            eventCategory: 'kurs',
+            eventAction: 'checkout_failed',
+            eventLabel: courseName
+        });
         let mainElement = document.getElementById('ddsco-main');
         // Payment for the order has failed.
         // hide PayPal button
@@ -687,6 +693,12 @@
     };
 
     const displaySelectedCourse = () => {
+        ga('send', {
+            hitType: 'event',
+            eventCategory: 'kurs',
+            eventAction: 'checkout_opened',
+            eventLabel: courseName
+        });
         store.flushItemList();
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
