@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * payments.js
  * Stripe Payments Demo. Created by Romain Huet (@romainhuet).
@@ -10,28 +12,29 @@
  * such as iDEAL, SOFORT, SEPA Direct Debit, and more.
  */
 
-(async () => {
-    'use strict';
+(async function () {
+    "use strict";
 
     // Retrieve the configuration for the store.
-    const config = await store.getConfig();
 
-    let amount = 0;
-    let courseName = '';
-    let isMobile = () => {
+    var config = await store.getConfig();
+
+    var amount = 0;
+    var courseName = "";
+    var isMobile = function isMobile() {
         return window.matchMedia("only screen and (max-width: 760px)").matches;
     };
 
     // Create references to the main form and its submit button.
-    const form = document.getElementById('payment-form');
-    const submitButton = form.querySelector('button[type=submit]');
+    var form = document.getElementById("payment-form");
+    var submitButton = form.querySelector("button[type=submit]");
 
     /* Google analytics */
-    const trackCourseBuy = () => {
-        ga('send', {
-            hitType: 'event',
-            eventCategory: 'kurs',
-            eventAction: 'checkout_success',
+    var trackCourseBuy = function trackCourseBuy() {
+        ga("send", {
+            hitType: "event",
+            eventCategory: "kurs",
+            eventAction: "checkout_success",
             eventLabel: courseName,
             eventValue: amount / 100
         });
@@ -42,30 +45,30 @@
      */
 
         // Create a Stripe client.
-    const stripe = Stripe(config.stripePublishableKey);
+    var stripe = Stripe(config.stripePublishableKey);
 
     // Create an instance of Elements.
-    const elements = stripe.elements();
+    var elements = stripe.elements();
 
     // Prepare the options for Elements to be styled accordingly.
-    const elementsOptions = {
+    var elementsOptions = {
         style: {
             base: {
-                iconColor: '#666ee8',
-                color: '#31325f',
+                iconColor: "#666ee8",
+                color: "#31325f",
                 fontWeight: 400,
                 fontFamily:
                     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif',
-                fontSmoothing: 'antialiased',
-                fontSize: '15px',
-                '::placeholder': {
-                    color: '#aab7c4',
+                fontSmoothing: "antialiased",
+                fontSize: "15px",
+                "::placeholder": {
+                    color: "#aab7c4"
                 },
-                ':-webkit-autofill': {
-                    color: '#666ee8',
-                },
-            },
-        },
+                ":-webkit-autofill": {
+                    color: "#666ee8"
+                }
+            }
+        }
     };
 
     /**
@@ -75,19 +78,21 @@
      */
 
         // Create a Card Element and pass some custom styles to it.
-    const card = elements.create('card', elementsOptions);
+    var card = elements.create("card", elementsOptions);
 
     // Mount the Card Element on the page.
-    card.mount('#card-element');
+    card.mount("#card-element");
 
     // Monitor change events on the Card Element to display any errors.
-    card.addEventListener('change', ({error}) => {
-        const cardErrors = document.getElementById('card-errors');
+    card.addEventListener("change", function (_ref) {
+        var error = _ref.error;
+
+        var cardErrors = document.getElementById("card-errors");
         if (error) {
             cardErrors.textContent = error.message;
-            cardErrors.classList.add('visible');
+            cardErrors.classList.add("visible");
         } else {
-            cardErrors.classList.remove('visible');
+            cardErrors.classList.remove("visible");
         }
         // Re-enable the Pay button.
         submitButton.disabled = false;
@@ -109,21 +114,27 @@
      */
 
         // Create a IBAN Element and pass the right options for styles and supported countries.
-    const iban = elements.create('iban', {style: elementsOptions['style'], supportedCountries: ['SEPA']});
+    var iban = elements.create("iban", {
+            style: elementsOptions["style"],
+            supportedCountries: ["SEPA"]
+        });
 
     // Mount the IBAN Element on the page.
-    iban.mount('#iban-element');
+    iban.mount("#iban-element");
 
     // Monitor change events on the IBAN Element to display any errors.
-    iban.on('change', ({error, bankName}) => {
-        const ibanErrors = document.getElementById('iban-errors');
+    iban.on("change", function (_ref2) {
+        var error = _ref2.error,
+            bankName = _ref2.bankName;
+
+        var ibanErrors = document.getElementById("iban-errors");
         if (error) {
             ibanErrors.textContent = error.message;
-            ibanErrors.classList.add('visible');
+            ibanErrors.classList.add("visible");
         } else {
-            ibanErrors.classList.remove('visible');
+            ibanErrors.classList.remove("visible");
             if (bankName) {
-                updateButtonLabel('sepa_debit', bankName);
+                updateButtonLabel("sepa_debit", bankName);
             }
         }
         // Re-enable the Pay button.
@@ -134,18 +145,18 @@
      * Implement a PayPal Checkout button.
      *
      */
-    const isAgbsChecked = () => {
-        return document.getElementById('ddsco-agbs').checked;
+    var isAgbsChecked = function isAgbsChecked() {
+        return document.getElementById("ddsco-agbs").checked;
     };
 
-    const toggleButton = (actions) => {
+    var toggleButton = function toggleButton(actions) {
         return isAgbsChecked() && amount ? actions.enable() : actions.disable();
     };
 
     function toggleValidationMessage() {
         if (!form.checkValidity()) {
             // Create the temporary button, click and remove it
-            const tmpSubmit = document.createElement('button');
+            var tmpSubmit = document.createElement("button");
             form.appendChild(tmpSubmit);
             tmpSubmit.click();
             form.removeChild(tmpSubmit);
@@ -153,101 +164,106 @@
     }
 
     function onChangeCheckbox(handler) {
-        document.getElementById('ddsco-agbs').addEventListener('change', handler);
+        document.getElementById("ddsco-agbs").addEventListener("change", handler);
     }
 
-    paypal.Button.render({
+    paypal.Button.render(
+        {
+            env: "production", // sandbox | production
+            locale: "de_DE",
 
-        env: 'production', // sandbox | production
-        locale: 'de_DE',
+            // PayPal Client IDs - replace with your own
+            // Create a PayPal app: https://developer.paypal.com/developer/applications/create
+            client: {
+                sandbox: "",
+                production:
+                    "AbRWBZnmecOZ6uTdLcqKWOukOCq5LiKmTDIZUSeb0olKO2U2FpOlN0ysMI0mR3r6SEsl6iPsbpOuh4xa"
+            },
+            style: {
+                label: "paypal",
+                size: "responsive", // small | medium | large | responsive
+                shape: "rect", // pill | rect
+                color: "blue", // gold | blue | silver | black
+                tagline: false
+            },
 
-        // PayPal Client IDs - replace with your own
-        // Create a PayPal app: https://developer.paypal.com/developer/applications/create
-        client: {
-            sandbox: '',
-            production: 'AbRWBZnmecOZ6uTdLcqKWOukOCq5LiKmTDIZUSeb0olKO2U2FpOlN0ysMI0mR3r6SEsl6iPsbpOuh4xa'
-        },
-        style: {
-            label: 'paypal',
-            size: 'responsive',    // small | medium | large | responsive
-            shape: 'rect',     // pill | rect
-            color: 'blue',     // gold | blue | silver | black
-            tagline: false
-        },
+            // Show the buyer a 'Pay Now' button in the checkout flow
+            commit: true,
 
-        // Show the buyer a 'Pay Now' button in the checkout flow
-        commit: true,
-
-        validate: function (actions) {
-            toggleButton(actions);
-
-            onChangeCheckbox(function () {
+            validate: function validate(actions) {
                 toggleButton(actions);
-            });
-        },
 
-        // payment() is called when the button is clicked
-        payment: function (data, actions) {
-            // Make a call to the REST api to create the payment
-            return actions.payment.create({
-                payment: {
-                    intent: 'sale',
-                    transactions: [
-                        {
-                            amount: {
-                                total: amount / 100,
-                                currency: 'EUR',
-                            },
-                            description: courseName,
-                            reference_id: courseName.toLocaleLowerCase().split(' ').join('-'),
-                            item_list: {
-                                items: [
-                                    {
-                                        name: courseName,
-                                        sku: "1",
-                                        price: (amount / 100).toString() + ".00",
-                                        currency: "EUR",
-                                        quantity: "1",
-                                        description: courseName,
-                                    },
-                                ]
+                onChangeCheckbox(function () {
+                    toggleButton(actions);
+                });
+            },
+
+            // payment() is called when the button is clicked
+            payment: function payment(data, actions) {
+                // Make a call to the REST api to create the payment
+                return actions.payment.create({
+                    payment: {
+                        intent: "sale",
+                        transactions: [
+                            {
+                                amount: {
+                                    total: amount / 100,
+                                    currency: "EUR"
+                                },
+                                description: courseName,
+                                reference_id: courseName
+                                    .toLocaleLowerCase()
+                                    .split(" ")
+                                    .join("-"),
+                                item_list: {
+                                    items: [
+                                        {
+                                            name: courseName,
+                                            sku: "1",
+                                            price: (amount / 100).toString() + ".00",
+                                            currency: "EUR",
+                                            quantity: "1",
+                                            description: courseName
+                                        }
+                                    ]
+                                }
                             }
-                        }
-                    ]
-                }
-            });
-        },
+                        ]
+                    }
+                });
+            },
 
-        // onAuthorize() is called when the buyer approves the payment
-        onAuthorize: function (data, actions) {
-            // Make a call to the REST api to execute the payment
-            return actions.payment.execute().then(function () {
-                showConfirmationScreen();
-                trackCourseBuy();
-            });
+            // onAuthorize() is called when the buyer approves the payment
+            onAuthorize: function onAuthorize(data, actions) {
+                // Make a call to the REST api to execute the payment
+                return actions.payment.execute().then(function () {
+                    showConfirmationScreen();
+                    trackCourseBuy();
+                });
+            },
+            // called if the buyer cancels the payment
+            // By default, the buyer is returned to the original page,
+            // but you're free to use this function to take them to a different page.
+            onCancel: function onCancel(data, actions) {
+                /*
+                     * Buyer cancelled the payment
+                     */
+            },
+            // called when an error occurs
+            // You can allow the buyer to re-try or show an error message
+            onError: function onError(err) {
+                /*
+                     * An error occurred during the transaction
+                     */
+                showErrorScreen(err.message);
+            },
+            // called for every click on the PayPal button
+            onClick: function onClick() {
+                toggleValidationMessage();
+            }
         },
-        // called if the buyer cancels the payment
-        // By default, the buyer is returned to the original page,
-        // but you're free to use this function to take them to a different page.
-        onCancel: function (data, actions) {
-            /*
-             * Buyer cancelled the payment
-             */
-        },
-        // called when an error occurs
-        // You can allow the buyer to re-try or show an error message
-        onError: function (err) {
-            /*
-             * An error occurred during the transaction
-             */
-            showErrorScreen(err.message);
-        },
-        // called for every click on the PayPal button
-        onClick: function () {
-            toggleValidationMessage();
-        }
-
-    }, '#paypal-button-container');
+        "#paypal-button-container"
+    );
 
     // Make sure all data is loaded from the store to compute the order amount.
     await store.loadProducts();
@@ -264,205 +280,216 @@
 
     // Listen to changes to the user-selected country.
     form
-        .querySelector('select[name=country]')
-        .addEventListener('change', event => {
+        .querySelector("select[name=country]")
+        .addEventListener("change", function (event) {
             event.preventDefault();
-            const country = event.target.value;
-            event.target.parentElement.className = `ddsco-field ${country}`;
+            var country = event.target.value;
+            event.target.parentElement.className = "ddsco-field " + country;
             showRelevantPaymentMethods(country);
         });
 
     // Submit handler for our payment form.
-    form.addEventListener('submit', async event => {
+    form.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         // Retrieve the user information from the form.
-        const payment = form.querySelector('input[name=payment]:checked').value;
-        const name = form.querySelector('input[name=name]').value;
-        const country = form.querySelector('select[name=country] option:checked')
+        var payment = form.querySelector("input[name=payment]:checked").value;
+        var name = form.querySelector("input[name=name]").value;
+        var country = form.querySelector("select[name=country] option:checked")
             .value;
-        const email = form.querySelector('input[name=email]').value;
+        var email = form.querySelector("input[name=email]").value;
         // Disable the Pay button to prevent multiple click events.
         submitButton.disabled = true;
 
         // Create the order using the email and shipping information from the form.
-        const order = await store.createOrder(
-            'eur',
-            store.getOrderItems(),
-            email
-        );
+        var order = await store.createOrder("eur", store.getOrderItems(), email);
 
-        if (payment === 'card') {
+        if (payment === "card") {
             // Create a Stripe source from the card information and the owner name.
-            const {source} = await stripe.createSource(card, {
-                owner: {
-                    name,
-                },
-                metadata: {
-                    course: courseName,
-                }
-            });
+            var _ref3 = await stripe.createSource(card, {
+                    owner: {
+                        name: name
+                    },
+                    metadata: {
+                        course: courseName
+                    }
+                }),
+                source = _ref3.source;
+
             await handleOrder(order, source);
-        } else if (payment === 'sepa_debit') {
+        } else if (payment === "sepa_debit") {
             // Create a SEPA Debit source from the IBAN information.
-            const sourceData = {
+            var sourceData = {
                 type: payment,
                 currency: order.currency,
                 owner: {
-                    name,
-                    email,
+                    name: name,
+                    email: email
                 },
                 mandate: {
                     // Automatically send a mandate notification email to your customer
                     // once the source is charged.
-                    notification_method: 'email',
+                    notification_method: "email"
                 },
                 metadata: {
-                    course: courseName,
+                    course: courseName
                 }
             };
-            const {source} = await stripe.createSource(iban, sourceData);
-            await handleOrder(order, source);
+
+            var _ref4 = await stripe.createSource(iban, sourceData),
+                _source = _ref4.source;
+
+            await handleOrder(order, _source);
         } else {
             // Prepare all the Stripe source common data.
-            const sourceData = {
+            var _sourceData = {
                 type: payment,
                 amount: order.amount,
                 currency: order.currency,
                 owner: {
-                    name,
-                    email,
+                    name: name,
+                    email: email
                 },
                 redirect: {
-                    return_url: window.location.href,
+                    return_url: window.location.href
                 },
-                statement_descriptor: 'Doodance Stripe Payments',
+                statement_descriptor: "Doodance Stripe Payments",
                 metadata: {
                     order: order.id,
-                    course: courseName,
-                },
+                    course: courseName
+                }
             };
 
             // Add extra source information which are specific to a payment method.
             switch (payment) {
-                case 'sepa_debit':
+                case "sepa_debit":
                     // SEPA Debit: Pass the IBAN entered by the user.
-                    sourceData.sepa_debit = {
-                        iban: form.querySelector('input[name=iban]').value,
+                    _sourceData.sepa_debit = {
+                        iban: form.querySelector("input[name=iban]").value
                     };
                     break;
             }
 
             // Create a Stripe source with the common data and extra information.
-            const {source, error} = await stripe.createSource(sourceData);
-            await handleOrder(order, source, error);
+
+            var _ref5 = await stripe.createSource(_sourceData),
+                _source2 = _ref5.source,
+                error = _ref5.error;
+
+            await handleOrder(order, _source2, error);
         }
     });
 
-    const showConfirmationScreen = () => {
-        let mainElement = document.getElementById('ddsco-main');
+    var showConfirmationScreen = function showConfirmationScreen() {
+        var mainElement = document.getElementById("ddsco-main");
         // Success! Payment is confirmed.
         // hide PayPal button
-        document.getElementById('paypal-button-container').style.display = 'none';
+        document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById('ddsco-course-title').style.display = 'none';
+        document.getElementById("ddsco-course-title").style.display = "none";
         // hide form
-        document.getElementById('payment-form').style.display = 'none';
+        document.getElementById("payment-form").style.display = "none";
         // hide validation errors
-        document.getElementById('card-errors').style.display = 'none';
-        document.getElementById('iban-errors').style.display = 'none';
+        document.getElementById("card-errors").style.display = "none";
+        document.getElementById("iban-errors").style.display = "none";
         // Update the interface to display the confirmation screen.
-        mainElement.classList.remove('processing');
-        mainElement.classList.add('success');
+        mainElement.classList.remove("processing");
+        mainElement.classList.add("success");
         if (isMobile()) {
-            document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
+            document.getElementById("ddsco-redirect-home-btn").style.display =
+                "block";
         } else {
-            document.getElementById('ddsco-close-popup-btn').style.display = 'block';
-            document.getElementById('ddsco-close-popup-btn').onclick = () => {
-                payCoursePopUpElement.style.display = 'none';
+            document.getElementById("ddsco-close-popup-btn").style.display = "block";
+            document.getElementById("ddsco-close-popup-btn").onclick = function () {
+                payCoursePopUpElement.style.display = "none";
             };
         }
-        document.getElementById('ddsco-confirmation').style.display = 'initial';
+        document.getElementById("ddsco-confirmation").style.display = "initial";
     };
 
-    const showProcessingScreen = () => {
-        let mainElement = document.getElementById('ddsco-main');
+    var showProcessingScreen = function showProcessingScreen() {
+        var mainElement = document.getElementById("ddsco-main");
         // hide PayPal button
-        document.getElementById('paypal-button-container').style.display = 'none';
+        document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById('ddsco-course-title').style.display = 'none';
+        document.getElementById("ddsco-course-title").style.display = "none";
         // hide form
-        document.getElementById('payment-form').style.display = 'none';
+        document.getElementById("payment-form").style.display = "none";
         // hide validation errors
-        document.getElementById('card-errors').style.display = 'none';
-        document.getElementById('iban-errors').style.display = 'none';
+        document.getElementById("card-errors").style.display = "none";
+        document.getElementById("iban-errors").style.display = "none";
         // Success! Now waiting for payment confirmation. Update the interface to display the confirmation screen.
-        mainElement.classList.remove('processing');
-        document.getElementById('ddsco-confirmation').style.display = 'initial';
+        mainElement.classList.remove("processing");
+        document.getElementById("ddsco-confirmation").style.display = "initial";
         // Update the note about receipt and shipping (the payment is not yet confirmed by the bank).
         // confirmationElement.querySelector('.note').innerText =
         //     'We’ll send your receipt and ship your items as soon as your payment is confirmed.';
-        mainElement.classList.add('success');
+        mainElement.classList.add("success");
     };
 
-    const showErrorScreen = (failureMessage) => {
-        ga('send', {
-            hitType: 'event',
-            eventCategory: 'kurs',
-            eventAction: 'checkout_failed',
+    var showErrorScreen = function showErrorScreen(failureMessage) {
+        ga("send", {
+            hitType: "event",
+            eventCategory: "kurs",
+            eventAction: "checkout_failed",
             eventLabel: courseName
         });
-        let mainElement = document.getElementById('ddsco-main');
+        var mainElement = document.getElementById("ddsco-main");
         // Payment for the order has failed.
         // hide PayPal button
-        document.getElementById('paypal-button-container').style.display = 'none';
+        document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById('ddsco-course-title').style.display = 'none';
+        document.getElementById("ddsco-course-title").style.display = "none";
         // hide form
-        document.getElementById('payment-form').style.display = 'none';
+        document.getElementById("payment-form").style.display = "none";
         // hide validation errors
-        document.getElementById('card-errors').style.display = 'none';
-        document.getElementById('iban-errors').style.display = 'none';
+        document.getElementById("card-errors").style.display = "none";
+        document.getElementById("iban-errors").style.display = "none";
         // display the wrapper
-        document.getElementById('ddsco-confirmation').style.display = 'initial';
+        document.getElementById("ddsco-confirmation").style.display = "initial";
         // display the failure reasure
-        document.getElementById('ddsco-payment-error-msg').innerText = failureMessage;
+        document.getElementById(
+            "ddsco-payment-error-msg"
+        ).innerText = failureMessage;
         // display the button for closing the pop-up
         if (isMobile()) {
-            document.getElementById('ddsco-redirect-home-btn').textContent = 'Zurück zum Checkout';
-            document.getElementById('ddsco-redirect-home-btn').style.display = 'block';
-            document.getElementById('ddsco-redirect-home-btn').onclick = resetForm;
+            document.getElementById("ddsco-redirect-home-btn").textContent =
+                "Zurück zum Checkout";
+            document.getElementById("ddsco-redirect-home-btn").style.display =
+                "block";
+            document.getElementById("ddsco-redirect-home-btn").onclick = resetForm;
         } else {
-            document.getElementById('ddsco-close-popup-btn').textContent = 'Zurück zum Checkout';
-            document.getElementById('ddsco-close-popup-btn').style.display = 'block';
+            document.getElementById("ddsco-close-popup-btn").textContent =
+                "Zurück zum Checkout";
+            document.getElementById("ddsco-close-popup-btn").style.display = "block";
         }
         // update CSS classes
-        mainElement.classList.remove('success');
-        mainElement.classList.remove('processing');
-        mainElement.classList.add('error');
+        mainElement.classList.remove("success");
+        mainElement.classList.remove("processing");
+        mainElement.classList.add("error");
     };
 
-    const resetForm = () => {
-        let mainElement = document.getElementById('ddsco-main');
-        mainElement.classList.remove('success');
-        mainElement.classList.remove('processing');
-        mainElement.classList.remove('error');
-        mainElement.classList.add('checkout');
+    var resetForm = function resetForm() {
+        var mainElement = document.getElementById("ddsco-main");
+        mainElement.classList.remove("success");
+        mainElement.classList.remove("processing");
+        mainElement.classList.remove("error");
+        mainElement.classList.add("checkout");
         // hide the button for closing the pop-up
         if (isMobile()) {
-            document.getElementById('ddsco-redirect-home-btn').display = 'none';
+            document.getElementById("ddsco-redirect-home-btn").display = "none";
         } else {
-            document.getElementById('ddsco-close-popup-btn').style.display = 'none';
+            document.getElementById("ddsco-close-popup-btn").style.display = "none";
         }
-        document.getElementById('payment-form').style.display = 'block';
-        document.getElementById('ddsco-course-title').style.display = 'block';
-        document.getElementById('card-errors').style.display = 'none';
-        document.getElementById('iban-errors').style.display = 'none';
+        document.getElementById("payment-form").style.display = "block";
+        document.getElementById("ddsco-course-title").style.display = "block";
+        document.getElementById("card-errors").style.display = "none";
+        document.getElementById("iban-errors").style.display = "none";
         // show PayPal button
-        document.getElementById('paypal-button-container').style.display = 'block';
+        document.getElementById("paypal-button-container").style.display = "block";
         // hide confirmation
-        document.getElementById('ddsco-confirmation').style.display = 'none';
-        document.getElementById('ddsco-payment-error-msg').innerText = '';
+        document.getElementById("ddsco-confirmation").style.display = "none";
+        document.getElementById("ddsco-payment-error-msg").innerText = "";
         //empty/reset input fields
         card.clear();
         iban.clear();
@@ -471,27 +498,27 @@
     };
 
     // Handle the order and source activation if required
-    const handleOrder = async (order, source) => {
+    var handleOrder = async function handleOrder(order, source) {
         switch (order.metadata.status) {
-            case 'created':
+            case "created":
                 switch (source.status) {
-                    case 'chargeable':
-                        submitButton.textContent = 'Zahlungsvorgang läuft…';
-                        const response = await store.payOrder(order, source);
+                    case "chargeable":
+                        submitButton.textContent = "Zahlungsvorgang läuft…";
+                        var response = await store.payOrder(order, source);
                         await handleOrder(response.order, response.source);
                         break;
-                    case 'pending':
+                    case "pending":
                         switch (source.flow) {
-                            case 'none':
+                            case "none":
                                 // Normally, sources with a `flow` value of `none` are chargeable right away,
                                 // but there are exceptions, for instance for WeChat QR codes just below.
                                 break;
-                            case 'redirect':
+                            case "redirect":
                                 // Immediately redirect the customer.
-                                submitButton.textContent = 'Redirecting…';
+                                submitButton.textContent = "Redirecting…";
                                 window.location.replace(source.redirect.url);
                                 break;
-                            case 'code_verification':
+                            case "code_verification":
                                 // Display a code verification input to verify the source.
                                 break;
                             default:
@@ -499,9 +526,9 @@
                                 break;
                         }
                         break;
-                    case 'failed':
+                    case "failed":
                         break;
-                    case 'canceled':
+                    case "canceled":
                         // Authentication failed, offer to select another payment method.
                         break;
                     default:
@@ -510,16 +537,16 @@
                 }
                 break;
 
-            case 'pending':
+            case "pending":
                 showConfirmationScreen();
                 trackCourseBuy();
                 break;
 
-            case 'failed':
+            case "failed":
                 showErrorScreen(order.metadata.errorMessage);
                 break;
 
-            case 'paid':
+            case "paid":
                 showConfirmationScreen();
                 trackCourseBuy();
                 break;
@@ -534,16 +561,18 @@
      * information to the user.
      */
 
-    const pollOrderStatus = async (
-        orderId,
-        timeout = 30000,
-        interval = 500,
-        start = null
-    ) => {
+    var pollOrderStatus = async function pollOrderStatus(orderId) {
+        var timeout =
+            arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 30000;
+        var interval =
+            arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 500;
+        var start =
+            arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
         start = start ? start : Date.now();
-        const endStates = ['paid', 'failed'];
+        var endStates = ["paid", "failed"];
         // Retrieve the latest order status.
-        const order = await store.getOrderStatus(orderId);
+        var order = await store.getOrderStatus(orderId);
         await handleOrder(order, {status: null});
         if (
             !endStates.includes(order.metadata.status) &&
@@ -554,16 +583,16 @@
         } else {
             if (!endStates.includes(order.metadata.status)) {
                 // Status has not changed yet. Let's time out.
-                console.warn(new Error('Polling timed out.'));
+                console.warn(new Error("Polling timed out."));
             }
         }
     };
 
-    const orderId = store.getActiveOrderId();
-    const mainElement = document.getElementById('ddsco-main');
-    if (orderId && window.location.search.includes('source')) {
+    var orderId = store.getActiveOrderId();
+    var mainElement = document.getElementById("ddsco-main");
+    if (orderId && window.location.search.includes("source")) {
         // Update the interface to display the processing screen.
-        mainElement.classList.add('success', 'processing');
+        mainElement.classList.add("success", "processing");
 
         // Poll the backend and check for an order status.
         // The backend updates the status upon receiving webhooks,
@@ -571,7 +600,7 @@
         pollOrderStatus(orderId);
     } else {
         // Update the interface to display the checkout form.
-        mainElement.classList.add('checkout');
+        mainElement.classList.add("checkout");
     }
 
     /**
@@ -580,10 +609,10 @@
 
         // List of relevant countries for the payment methods supported in this demo.
         // Read the Stripe guide: https://stripe.com/payments/payment-methods-guide
-    const paymentMethods = {
+    var paymentMethods = {
             card: {
-                name: 'Card',
-                flow: 'none',
+                name: "Card",
+                flow: "none"
             },
             // giropay: {
             //   name: 'Giropay',
@@ -591,172 +620,206 @@
             //   countries: [],
             // },
             sepa_debit: {
-                name: 'SEPA Direct Debit',
-                flow: 'none',
-                countries: ['FR', 'DE', 'ES', 'BE', 'NL', 'LU', 'IT', 'PT', 'AT', 'IE'],
+                name: "SEPA Direct Debit",
+                flow: "none",
+                countries: ["FR", "DE", "ES", "BE", "NL", "LU", "IT", "PT", "AT", "IE"]
             },
             sofort: {
-                name: 'SOFORT',
-                flow: 'redirect',
-                countries: ['DE', 'AT'],
+                name: "SOFORT",
+                flow: "redirect",
+                countries: ["DE", "AT"]
             },
             paypal: {
-                name: 'PayPal',
-                flow: 'paypal'
+                name: "PayPal",
+                flow: "paypal"
             }
         };
 
     // Update the main button to reflect the payment method being selected.
-    const updateButtonLabel = paymentMethod => {
-        if (paymentMethod === 'paypal') {
-            submitButton.style.display = 'none';
-            document.getElementById('paypal-button-container')
-                .style.display = 'initial';
+    var updateButtonLabel = function updateButtonLabel(paymentMethod) {
+        if (paymentMethod === "paypal") {
+            submitButton.style.display = "none";
+            document.getElementById("paypal-button-container").style.display =
+                "initial";
         } else {
             // let amount = store.formatPrice(store.getOrderTotal(), 'eur');
-            submitButton.innerText = `Jetzt kaufen`;
-            document.getElementById('paypal-button-container')
-                .style.display = 'none';
-            submitButton.style.display = 'initial';
+            submitButton.innerText = "Jetzt kaufen";
+            document.getElementById("paypal-button-container").style.display = "none";
+            submitButton.style.display = "initial";
         }
     };
 
     // Show only the payment methods that are relevant to the selected country.
-    const showRelevantPaymentMethods = country => {
+    var showRelevantPaymentMethods = function showRelevantPaymentMethods(
+        country
+    ) {
         if (!country) {
-            country = form.querySelector('select[name=country] option:checked').value;
+            country = form.querySelector("select[name=country] option:checked").value;
         }
 
-        const paymentInputs = form.querySelectorAll('input[name=payment]');
-        for (let i = 0; i < paymentInputs.length; i++) {
-            let input = paymentInputs[i];
+        var paymentInputs = form.querySelectorAll("input[name=payment]");
+        for (var i = 0; i < paymentInputs.length; i++) {
+            var input = paymentInputs[i];
             input.parentElement.classList.toggle(
-                'visible',
-                input.value === 'paypal' || input.value === 'card' ||
+                "visible",
+                input.value === "paypal" ||
+                input.value === "card" ||
                 paymentMethods[input.value].countries.includes(country)
             );
         }
 
         // Hide the tabs if card is the only available option.
-        const paymentMethodsTabs = document.getElementById('payment-methods');
+        var paymentMethodsTabs = document.getElementById("payment-methods");
         paymentMethodsTabs.classList.toggle(
-            'visible',
-            paymentMethodsTabs.querySelectorAll('li.visible').length > 1
+            "visible",
+            paymentMethodsTabs.querySelectorAll("li.visible").length > 1
         );
 
         // Check the first payment option again.
-        paymentInputs[0].checked = 'checked';
-        form.querySelector('.payment-info.paypal').classList.add('visible');
-        form.querySelector('.payment-info.card').classList.remove('visible');
-        form.querySelector('.payment-info.sepa_debit').classList.remove('visible');
-        form.querySelector('.payment-info.redirect').classList.remove('visible');
+        paymentInputs[0].checked = "checked";
+        form.querySelector(".payment-info.paypal").classList.add("visible");
+        form.querySelector(".payment-info.card").classList.remove("visible");
+        form.querySelector(".payment-info.sepa_debit").classList.remove("visible");
+        form.querySelector(".payment-info.redirect").classList.remove("visible");
         updateButtonLabel(paymentInputs[0].value);
     };
 
     // Listen to changes to the payment method selector.
-    for (let input of document.querySelectorAll('input[name=payment]')) {
-        input.addEventListener('change', event => {
-            event.preventDefault();
-            const payment = form.querySelector('input[name=payment]:checked').value;
-            const flow = paymentMethods[payment].flow;
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
 
-            // Update button label.
-            updateButtonLabel(event.target.value);
+    try {
+        for (
+            var _iterator = document
+                    .querySelectorAll("input[name=payment]")
+                    [Symbol.iterator](),
+                _step;
+            !(_iteratorNormalCompletion = (_step = _iterator.next()).done);
+            _iteratorNormalCompletion = true
+        ) {
+            var input = _step.value;
 
-            // Show the relevant details, whether it's an extra element or extra information for the user.
-            form
-                .querySelector('.payment-info.card')
-                .classList.toggle('visible', payment === 'card');
-            form
-                .querySelector('.payment-info.sepa_debit')
-                .classList.toggle('visible', payment === 'sepa_debit');
-            form
-                .querySelector('.payment-info.redirect')
-                .classList.toggle('visible', flow === 'redirect');
-            form
-                .querySelector('.payment-info.paypal')
-                .classList.toggle('visible', flow === 'paypal');
-            document
-                .getElementById('card-errors')
-                .classList.remove('visible', payment !== 'card');
-        });
+            input.addEventListener("change", function (event) {
+                event.preventDefault();
+                var payment = form.querySelector("input[name=payment]:checked").value;
+                var flow = paymentMethods[payment].flow;
+
+                // Update button label.
+                updateButtonLabel(event.target.value);
+
+                // Show the relevant details, whether it's an extra element or extra information for the user.
+                form
+                    .querySelector(".payment-info.card")
+                    .classList.toggle("visible", payment === "card");
+                form
+                    .querySelector(".payment-info.sepa_debit")
+                    .classList.toggle("visible", payment === "sepa_debit");
+                form
+                    .querySelector(".payment-info.redirect")
+                    .classList.toggle("visible", flow === "redirect");
+                form
+                    .querySelector(".payment-info.paypal")
+                    .classList.toggle("visible", flow === "paypal");
+                document
+                    .getElementById("card-errors")
+                    .classList.remove("visible", payment !== "card");
+            });
+        }
+
+        // Select the default country from the config on page load.
+    } catch (err) {
+        _didIteratorError = true;
+        _iteratorError = err;
+    } finally {
+        try {
+            if (!_iteratorNormalCompletion && _iterator.return) {
+                _iterator.return();
+            }
+        } finally {
+            if (_didIteratorError) {
+                throw _iteratorError;
+            }
+        }
     }
 
-    // Select the default country from the config on page load.
-    const countrySelector = document.getElementById('country');
-    countrySelector.querySelector(`option[value=${'DE'}]`).selected = 'selected';
-    countrySelector.className = `ddsco-field ${'DE'}`;
+    var countrySelector = document.getElementById("country");
+    countrySelector.querySelector("option[value=" + "DE" + "]").selected =
+        "selected";
+    countrySelector.className = "ddsco-field " + "DE";
     // Listen to clicks on payment trigger buttons and update the item in the order accordingly
-    const inputPaymentValue = (btnEvent) => {
+    var inputPaymentValue = function inputPaymentValue(btnEvent) {
         courseName = courseIdNameMap.get(btnEvent.target.id);
         displaySelectedCourse();
     };
 
-    const displaySelectedCourse = () => {
-        ga('send', {
-            hitType: 'event',
-            eventCategory: 'kurs',
-            eventAction: 'checkout_opened',
+    var displaySelectedCourse = function displaySelectedCourse() {
+        ga("send", {
+            hitType: "event",
+            eventCategory: "kurs",
+            eventAction: "checkout_opened",
             eventLabel: courseName
         });
         store.flushItemList();
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
         // display course name & amount
-        document.getElementById('ddsco-course-title')
-            .innerText = courseName + ' ' + (amount / 100).toString() + '€';
+        document.getElementById("ddsco-course-title").innerText =
+            courseName + " " + (amount / 100).toString() + "€";
         // update button label with amount
-        const paymentInputs = form.querySelectorAll('input[name=payment]');
-        for (let i = 0; i < paymentInputs.length; i++) {
-            let input = paymentInputs[i];
+        var paymentInputs = form.querySelectorAll("input[name=payment]");
+        for (var i = 0; i < paymentInputs.length; i++) {
+            var input = paymentInputs[i];
             if (input.checked) {
                 updateButtonLabel(input.value);
                 break;
             }
         }
-    }
+    };
 
     // clicking on the agbs checkbox text ticks the checkbox
-    document.getElementById('ddsco-agbs-text').onclick = () => {
-        document.getElementById('ddsco-agbs').checked = !document.getElementById('ddsco-agbs').checked;
+    document.getElementById("ddsco-agbs-text").onclick = function () {
+        document.getElementById("ddsco-agbs").checked = !document.getElementById(
+            "ddsco-agbs"
+        ).checked;
     };
 
     // Create a map of the button ids and course names
-    const courseIdNameMap = new Map();
-    courseIdNameMap.set('pay-ww', 'Wiener Walzer');
-    courseIdNameMap.set('pay-ww-2', 'Wiener Walzer');
-    courseIdNameMap.set('pay-ww-3', 'Wiener Walzer');
-    courseIdNameMap.set('pay-ww-4', 'Wiener Walzer');
-    courseIdNameMap.set('pay-ww-5', 'Wiener Walzer');
-    courseIdNameMap.set('checkout-wiener-walzer', 'Wiener Walzer');
-    courseIdNameMap.set('pay-lw', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-lw-2', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-lw-3', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-lw-4', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-lw-5', 'Langsamer Walzer');
-    courseIdNameMap.set('checkout-langsamer-walzer', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-lw-mobile', 'Langsamer Walzer');
-    courseIdNameMap.set('pay-df', 'Discofox');
-    courseIdNameMap.set('pay-df-2', 'Discofox');
-    courseIdNameMap.set('pay-df-3', 'Discofox');
-    courseIdNameMap.set('pay-df-4', 'Discofox');
-    courseIdNameMap.set('pay-df-5', 'Discofox');
-    courseIdNameMap.set('checkout-discofox', 'Discofox');
-    courseIdNameMap.set('pay-df-mobile', 'Discofox');
+    var courseIdNameMap = new Map();
+    courseIdNameMap.set("pay-ww", "Wiener Walzer");
+    courseIdNameMap.set("pay-ww-2", "Wiener Walzer");
+    courseIdNameMap.set("pay-ww-3", "Wiener Walzer");
+    courseIdNameMap.set("pay-ww-4", "Wiener Walzer");
+    courseIdNameMap.set("pay-ww-5", "Wiener Walzer");
+    courseIdNameMap.set("checkout-wiener-walzer", "Wiener Walzer");
+    courseIdNameMap.set("pay-lw", "Langsamer Walzer");
+    courseIdNameMap.set("pay-lw-2", "Langsamer Walzer");
+    courseIdNameMap.set("pay-lw-3", "Langsamer Walzer");
+    courseIdNameMap.set("pay-lw-4", "Langsamer Walzer");
+    courseIdNameMap.set("pay-lw-5", "Langsamer Walzer");
+    courseIdNameMap.set("checkout-langsamer-walzer", "Langsamer Walzer");
+    courseIdNameMap.set("pay-lw-mobile", "Langsamer Walzer");
+    courseIdNameMap.set("pay-df", "Discofox");
+    courseIdNameMap.set("pay-df-2", "Discofox");
+    courseIdNameMap.set("pay-df-3", "Discofox");
+    courseIdNameMap.set("pay-df-4", "Discofox");
+    courseIdNameMap.set("pay-df-5", "Discofox");
+    courseIdNameMap.set("checkout-discofox", "Discofox");
+    courseIdNameMap.set("pay-df-mobile", "Discofox");
 
-    const setBtnListeners = () => {
+    var setBtnListeners = function setBtnListeners() {
         // Create references to payment trigger buttons
         //wiener walzer
-        const btnWw = document.getElementById('pay-ww');
-        const btnWw2 = document.getElementById('pay-ww-2');
-        const btnWw3 = document.getElementById('pay-ww-3');
-        const btnWw4 = document.getElementById('pay-ww-4');
-        const btnWw5 = document.getElementById('pay-ww-5');
-        const btnWwMob = document.getElementById('pay-ww-mobile');
-        const btnWwMob2 = document.getElementById('pay-ww-mobile-2');
-        const btnWwMob3 = document.getElementById('pay-ww-mobile-3');
-        const btnWwMob4 = document.getElementById('pay-ww-mobile-4');
-        const btnWwMob5 = document.getElementById('pay-ww-mobile-5');
+        var btnWw = document.getElementById("pay-ww");
+        var btnWw2 = document.getElementById("pay-ww-2");
+        var btnWw3 = document.getElementById("pay-ww-3");
+        var btnWw4 = document.getElementById("pay-ww-4");
+        var btnWw5 = document.getElementById("pay-ww-5");
+        var btnWwMob = document.getElementById("pay-ww-mobile");
+        var btnWwMob2 = document.getElementById("pay-ww-mobile-2");
+        var btnWwMob3 = document.getElementById("pay-ww-mobile-3");
+        var btnWwMob4 = document.getElementById("pay-ww-mobile-4");
+        var btnWwMob5 = document.getElementById("pay-ww-mobile-5");
         if (btnWw) btnWw.onclick = inputPaymentValue;
         if (btnWw2) btnWw2.onclick = inputPaymentValue;
         if (btnWw3) btnWw3.onclick = inputPaymentValue;
@@ -768,16 +831,16 @@
         if (btnWwMob4) btnWwMob4.onclick = inputPaymentValue;
         if (btnWwMob5) btnWwMob5.onclick = inputPaymentValue;
         //langsamer walzer
-        const btnLw = document.getElementById('pay-lw');
-        const btnLw2 = document.getElementById('pay-lw-2');
-        const btnLw3 = document.getElementById('pay-lw-3');
-        const btnLw4 = document.getElementById('pay-lw-4');
-        const btnLw5 = document.getElementById('pay-lw-5');
-        const btnLwMob = document.getElementById('pay-lw-mobile');
-        const btnLwMob2 = document.getElementById('pay-lw-mobile-2');
-        const btnLwMob3 = document.getElementById('pay-lw-mobile-3');
-        const btnLwMob4 = document.getElementById('pay-lw-mobile-4');
-        const btnLwMob5 = document.getElementById('pay-lw-mobile-5');
+        var btnLw = document.getElementById("pay-lw");
+        var btnLw2 = document.getElementById("pay-lw-2");
+        var btnLw3 = document.getElementById("pay-lw-3");
+        var btnLw4 = document.getElementById("pay-lw-4");
+        var btnLw5 = document.getElementById("pay-lw-5");
+        var btnLwMob = document.getElementById("pay-lw-mobile");
+        var btnLwMob2 = document.getElementById("pay-lw-mobile-2");
+        var btnLwMob3 = document.getElementById("pay-lw-mobile-3");
+        var btnLwMob4 = document.getElementById("pay-lw-mobile-4");
+        var btnLwMob5 = document.getElementById("pay-lw-mobile-5");
         if (btnLw) btnLw.onclick = inputPaymentValue;
         if (btnLw2) btnLw3.onclick = inputPaymentValue;
         if (btnLw3) btnLw3.onclick = inputPaymentValue;
@@ -789,16 +852,16 @@
         if (btnLwMob4) btnLwMob4.onclick = inputPaymentValue;
         if (btnLwMob5) btnLwMob5.onclick = inputPaymentValue;
         //discofox
-        const btnDf = document.getElementById('pay-df');
-        const btnDf2 = document.getElementById('pay-df-2');
-        const btnDf3 = document.getElementById('pay-df-3');
-        const btnDf4 = document.getElementById('pay-df-4');
-        const btnDf5 = document.getElementById('pay-df-5');
-        const btnDfMob = document.getElementById('pay-df-mobile');
-        const btnDfMob2 = document.getElementById('pay-df-mobile-2');
-        const btnDfMob3 = document.getElementById('pay-df-mobile-3');
-        const btnDfMob4 = document.getElementById('pay-df-mobile-4');
-        const btnDfMob5 = document.getElementById('pay-df-mobile-5');
+        var btnDf = document.getElementById("pay-df");
+        var btnDf2 = document.getElementById("pay-df-2");
+        var btnDf3 = document.getElementById("pay-df-3");
+        var btnDf4 = document.getElementById("pay-df-4");
+        var btnDf5 = document.getElementById("pay-df-5");
+        var btnDfMob = document.getElementById("pay-df-mobile");
+        var btnDfMob2 = document.getElementById("pay-df-mobile-2");
+        var btnDfMob3 = document.getElementById("pay-df-mobile-3");
+        var btnDfMob4 = document.getElementById("pay-df-mobile-4");
+        var btnDfMob5 = document.getElementById("pay-df-mobile-5");
         if (btnDf) btnDf.onclick = inputPaymentValue;
         if (btnDf2) btnDf2.onclick = inputPaymentValue;
         if (btnDf3) btnDf3.onclick = inputPaymentValue;
@@ -814,33 +877,37 @@
     setBtnListeners();
 
     // buttons for closing the modal
-    const payCoursePopUpElement = document.getElementsByClassName('pay-course')[0];
-    const btnClosePopUp = document.getElementById('ddsco-close-popup-btn');
-    const btnClosePopUpX = document.getElementById('ddsco-close-popup-x-btn');
-    const popupBackground = document.querySelectorAll('[data-ix=hide-payment-form]')[0];
+    var payCoursePopUpElement = document.getElementsByClassName("pay-course")[0];
+    var btnClosePopUp = document.getElementById("ddsco-close-popup-btn");
+    var btnClosePopUpX = document.getElementById("ddsco-close-popup-x-btn");
+    var popupBackground = document.querySelectorAll(
+        "[data-ix=hide-payment-form]"
+    )[0];
 
     if (btnClosePopUp) {
-        btnClosePopUp.addEventListener("click", () => {
+        btnClosePopUp.addEventListener("click", function () {
             resetForm();
         });
     }
 
     if (btnClosePopUpX) {
-        btnClosePopUpX.addEventListener("click", () => {
-            payCoursePopUpElement.style.display = 'none';
+        btnClosePopUpX.addEventListener("click", function () {
+            payCoursePopUpElement.style.display = "none";
             resetForm();
         });
     }
 
     if (popupBackground) {
-        popupBackground.addEventListener('click', () => {
-            payCoursePopUpElement.style.display = 'none';
+        popupBackground.addEventListener("click", function () {
+            payCoursePopUpElement.style.display = "none";
             resetForm();
-        })
+        });
     }
 
-    const readUrl = () => {
-        let courseKey = window.location.href.substr(window.location.href.lastIndexOf('/') + 1);
+    var readUrl = function readUrl() {
+        var courseKey = window.location.href.substr(
+            window.location.href.lastIndexOf("/") + 1
+        );
         courseName = courseIdNameMap.get(courseKey);
         if (courseName) {
             displaySelectedCourse();
