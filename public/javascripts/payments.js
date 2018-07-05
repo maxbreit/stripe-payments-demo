@@ -503,7 +503,7 @@
             case "created":
                 switch (source.status) {
                     case "chargeable":
-                        submitButton.textContent = "Zahlungsvorgang läuft…";
+                        submitButton.textContent = submitButton.dataset.textVorgang;
                         var response = await store.payOrder(order, source);
                         await handleOrder(response.order, response.source);
                         break;
@@ -643,7 +643,7 @@
                 "initial";
         } else {
             // let amount = store.formatPrice(store.getOrderTotal(), 'eur');
-            submitButton.innerText = "Jetzt kaufen";
+            submitButton.innerText = submitButton.dataset.textKaufen;
             document.getElementById("paypal-button-container").style.display = "none";
             submitButton.style.display = "initial";
         }
