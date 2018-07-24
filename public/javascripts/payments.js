@@ -302,7 +302,7 @@
         submitButton.disabled = true;
 
         // Create the order using the email and shipping information from the form.
-        var order = await store.createOrder("eur", store.getOrderItems(), email);
+        var order = await store.createOrder("eur", store.getOrderItems(), email, name, country);
 
         if (payment === "card") {
             // Create a Stripe source from the card information and the owner name.

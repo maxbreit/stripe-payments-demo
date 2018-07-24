@@ -144,7 +144,13 @@ var Store = (function () {
         },
         {
             key: "createOrder",
-            value: async function createOrder(currency, items, email, shipping) {
+            value: async function createOrder(
+                currency,
+                items,
+                email,
+                customer,
+                country
+            ) {
                 try {
                     var response = await fetch(this.urlPrefix + "/orders", {
                         method: "POST",
@@ -152,7 +158,9 @@ var Store = (function () {
                         body: JSON.stringify({
                             currency: currency,
                             items: items,
-                            email: email
+                            email: email,
+                            customer: customer,
+                            country: country
                         })
                     });
                     var data = await response.json();
