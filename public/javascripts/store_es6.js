@@ -12,8 +12,7 @@ class Store {
     constructor() {
         this.lineItems = [];
         this.products = {};
-        // this.urlPrefix = 'https://doodance-stripe.herokuapp.com';
-        this.urlPrefix = 'https://33f3a835.ngrok.io';
+        this.urlPrefix = 'https://doodance-stripe.herokuapp.com';
     }
 
     // Add the item with the specified name to the list of line items
@@ -80,7 +79,7 @@ class Store {
     }
 
     // Create an order object to represent the line items.
-    async createOrder(currency, items, email, shipping) {
+    async createOrder(currency, items, email, customer, country) {
         try {
             const response = await fetch(`${this.urlPrefix}/orders`, {
                 method: 'POST',
@@ -89,6 +88,8 @@ class Store {
                     currency,
                     items,
                     email,
+                    'customer': customer,
+                    'country': country
                 }),
             });
             const data = await response.json();

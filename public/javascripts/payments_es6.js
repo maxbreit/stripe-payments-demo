@@ -279,8 +279,7 @@
         // Retrieve the user information from the form.
         const payment = form.querySelector('input[name=payment]:checked').value;
         const name = form.querySelector('input[name=name]').value;
-        const country = form.querySelector('select[name=country] option:checked')
-            .value;
+        const country = form.querySelector('select[name=country] option:checked').value;
         const email = form.querySelector('input[name=email]').value;
         // Disable the Pay button to prevent multiple click events.
         submitButton.disabled = true;
@@ -289,7 +288,9 @@
         const order = await store.createOrder(
             'eur',
             store.getOrderItems(),
-            email
+            email,
+            name,
+            country
         );
 
         if (payment === 'card') {
