@@ -113,7 +113,12 @@
 				</div>
 			</section>
 			<div id="paypal-button-container" style="display: none"></div>
-			<button class="ddsco-submit-btn" type="submit">Jetzt kaufen</button>
+			<button class="ddsco-submit-btn"
+							type="submit"
+							data-text-kaufen="Jetzt kaufen"
+							data-text-vorgang="Zahlungsvorgang läuft…">
+				Jetzt kaufen
+			</button>
 			<div id="iban-errors" class="element-errors"></div>
 			<div id="card-errors" class="element-errors"></div>
 		</form>
@@ -153,8 +158,8 @@
 <!-- Library to render QR codes -->
 <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
 <!-- App -->
-<script src="/javascripts/store.js"></script>
-<script src="/javascripts/payments.js"></script>
+<script src="/javascripts/store_es6.js"></script>
+<script src="/javascripts/payments_es6.js"></script>
 </body>
 
 </html>
