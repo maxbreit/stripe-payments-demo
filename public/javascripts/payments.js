@@ -386,7 +386,9 @@
         // hide PayPal button
         document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById("ddsco-course-title").style.display = "none";
+        if (!onKassePages()){
+            document.getElementById("ddsco-course-title").style.display = "none";
+        }
         // hide form
         document.getElementById("payment-form").style.display = "none";
         // hide validation errors
@@ -412,7 +414,9 @@
         // hide PayPal button
         document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById("ddsco-course-title").style.display = "none";
+        if (!onKassePages()) {
+            document.getElementById("ddsco-course-title").style.display = "none";
+        }
         // hide form
         document.getElementById("payment-form").style.display = "none";
         // hide validation errors
@@ -439,7 +443,9 @@
         // hide PayPal button
         document.getElementById("paypal-button-container").style.display = "none";
         // hide course title
-        document.getElementById("ddsco-course-title").style.display = "none";
+        if (!onKassePages()) {
+            document.getElementById("ddsco-course-title").style.display = "none";
+        }
         // hide form
         document.getElementById("payment-form").style.display = "none";
         // hide validation errors
@@ -482,7 +488,9 @@
             document.getElementById("ddsco-close-popup-btn").style.display = "none";
         }
         document.getElementById("payment-form").style.display = "block";
-        document.getElementById("ddsco-course-title").style.display = "block";
+        if (!onKassePages()) {
+            document.getElementById("ddsco-course-title").style.display = "block";
+        }
         document.getElementById("card-errors").style.display = "none";
         document.getElementById("iban-errors").style.display = "none";
         // show PayPal button
@@ -764,8 +772,10 @@
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
         // display course name & amount
-        document.getElementById("ddsco-course-title").innerText =
-            courseName + " " + (amount / 100).toString() + "€";
+        if (!onKassePages()) {
+            document.getElementById("ddsco-course-title").innerText =
+                courseName + " " + (amount / 100).toString() + "€";
+        }
         // update button label with amount
         var paymentInputs = form.querySelectorAll("input[name=payment]");
         for (var i = 0; i < paymentInputs.length; i++) {
