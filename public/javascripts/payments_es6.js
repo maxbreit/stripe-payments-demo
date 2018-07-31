@@ -700,6 +700,11 @@
             eventAction: 'checkout_opened',
             eventLabel: courseName
         });
+        // Facebook track Checkout Opened event
+        fbq('track', 'AddToCart', {
+          content_name: courseName,
+          content_type: 'Kurs'
+        });
         store.flushItemList();
         store.addItemToList(courseName);
         amount = store.getOrderTotal();
