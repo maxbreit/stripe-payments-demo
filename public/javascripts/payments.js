@@ -395,7 +395,7 @@
         // Update the interface to display the confirmation screen.
         mainElement.classList.remove("processing");
         mainElement.classList.add("success");
-        if (isMobile()) {
+        if (isMobile() || onKassePages()) {
             document.getElementById("ddsco-redirect-home-btn").style.display =
                 "block";
         } else {
@@ -452,7 +452,7 @@
             "ddsco-payment-error-msg"
         ).innerText = failureMessage;
         // display the button for closing the pop-up
-        if (isMobile()) {
+        if (isMobile() || onKassePages()) {
             document.getElementById("ddsco-redirect-home-btn").textContent =
                 "Zurück zum Checkout";
             document.getElementById("ddsco-redirect-home-btn").style.display =
@@ -787,12 +787,14 @@
     // Create a map of the button ids and course names
     var courseIdNameMap = new Map();
     courseIdNameMap.set("pay-ww", "Wiener Walzer");
+    courseIdNameMap.set("kasse-ww", "Wiener Walzer");
     courseIdNameMap.set("pay-ww-2", "Wiener Walzer");
     courseIdNameMap.set("pay-ww-3", "Wiener Walzer");
     courseIdNameMap.set("pay-ww-4", "Wiener Walzer");
     courseIdNameMap.set("pay-ww-5", "Wiener Walzer");
     courseIdNameMap.set("checkout-wiener-walzer", "Wiener Walzer");
     courseIdNameMap.set("pay-lw", "Langsamer Walzer");
+    courseIdNameMap.set("kasse-lw", "Langsamer Walzer");
     courseIdNameMap.set("pay-lw-2", "Langsamer Walzer");
     courseIdNameMap.set("pay-lw-3", "Langsamer Walzer");
     courseIdNameMap.set("pay-lw-4", "Langsamer Walzer");
@@ -800,6 +802,7 @@
     courseIdNameMap.set("checkout-langsamer-walzer", "Langsamer Walzer");
     courseIdNameMap.set("pay-lw-mobile", "Langsamer Walzer");
     courseIdNameMap.set("pay-df", "Discofox");
+    courseIdNameMap.set("kasse-df", "Discofox");
     courseIdNameMap.set("pay-df-2", "Discofox");
     courseIdNameMap.set("pay-df-3", "Discofox");
     courseIdNameMap.set("pay-df-4", "Discofox");
@@ -913,6 +916,14 @@
             displaySelectedCourse();
         }
     };
+
+    var onKassePages = function onKassePages() {
+        var courseKey = window.location.href.substr(
+            window.location.href.lastIndexOf("/") + 1
+        );
+        return (['kasse-ww','kasse-lw','kasse-df'].indexOf(courseKey) > -1);
+    };
+    console.log(onKassePages());
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();
