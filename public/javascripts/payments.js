@@ -239,6 +239,7 @@
                 return actions.payment.execute().then(function () {
                     showConfirmationScreen();
                     trackCourseBuy();
+                    register_purchase('Purchase', store.getOrderTotal() / 100)
                 });
             },
             // called if the buyer cancels the payment
@@ -507,7 +508,7 @@
 
     // Handle the order and source activation if required
     var handleOrder = async function handleOrder(order, source) {
-        switch (order.metadata.status) {
+        switch (order.status) {
             case "created":
                 switch (source.status) {
                     case "chargeable":
@@ -933,7 +934,6 @@
         );
         return (['kasse-ww','kasse-lw','kasse-df'].indexOf(courseKey) > -1);
     };
-    console.log(onKassePages());
 
     // Trigger the method to show relevant payment methods on page load.
     showRelevantPaymentMethods();

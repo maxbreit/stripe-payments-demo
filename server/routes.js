@@ -62,45 +62,18 @@ router.post('/orders/:id/pay', async (req, res, next) => {
       // A 3D Secure source may be created referencing the card source.
       source = await dynamic3DS(source, order, req);
     }
-    // Demo: In test mode, replace the source with a test token so charges can work.
-    // if (!source.livemode) {
-    //   source.id = 'tok_visa';
-    // }
     // Pay the order using the Stripe source.
     if (source && source.status === 'chargeable') {
-      let charge, status, errorMessage;
       try {
-        charge = await stripe.charges.create(
-          {
-            source: source.id,
-            amount: order.amount,
-            currency: order.currency,
-            receipt_email: order.email,
-          },
-          {
-            // Set a unique idempotency key based on the order ID.
-            // This is to avoid any race conditions with your webhook handler.
-            idempotency_key: order.id,
-          }
-        );
+          order = await orders.pay(order.id, source.id);
       } catch (err) {
         // This is where you handle declines and errors.
-        // For the demo we simply set to failed.
-        errorMessage = err.message;
-        status = 'failed';
+        console.log('Error while paying order:', err);
       }
-      if (charge && charge.status === 'succeeded') {
-        status = 'paid';
-      } else if (charge) {
-        status = charge.status;
-      } else {
-        status = 'failed';
-      }
-      // Update the order with the charge status.
-      order = await orders.update(order.id, {metadata: {status, errorMessage}});
     }
     return res.status(200).json({order, source});
   } catch (err) {
+    console.log('Error while paying order:',err);
     return res.status(500).json({error: err.message});
   }
 });

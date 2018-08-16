@@ -32,6 +32,11 @@ const retrieveOrder = async orderId => {
   return await stripe.orders.retrieve(orderId);
 };
 
+// Pay an order by ID.
+const payOrder = async (orderId, sourceId)=> {
+  return await stripe.orders.pay(orderId, { source: sourceId });
+};
+
 // Update an order.
 const updateOrder = async (orderId, properties) => {
   return await stripe.orders.update(orderId, properties);
@@ -62,6 +67,7 @@ const checkProducts = productList => {
 exports.orders = {
   create: createOrder,
   retrieve: retrieveOrder,
+  pay: payOrder,
   update: updateOrder,
 };
 
