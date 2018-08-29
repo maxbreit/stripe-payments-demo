@@ -70,6 +70,13 @@ router.post('/orders/:id/pay', async (req, res, next) => {
         // This is where you handle declines and errors.
         console.log('Error while paying order:', err);
       }
+    } else {
+        try {
+            console.log(source);
+            console.log(order);
+        } catch (e) {
+            console.log(e);
+        }
     }
     return res.status(200).json({order, source});
   } catch (err) {
