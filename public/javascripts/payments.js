@@ -292,9 +292,16 @@
     // Submit handler for our payment form.
     form.addEventListener("submit", async function (event) {
         event.preventDefault();
-
         // Retrieve the user information from the form.
         var payment = form.querySelector("input[name=payment]:checked").value;
+        if (payment === "card" && !card._complete) {
+            card.focus();
+            return
+        }
+        if (payment === "sepa_debit" && !iban._complete) {
+            iban.focus();
+            return;
+        }
         var name = form.querySelector("input[name=name]").value;
         var country = form.querySelector("select[name=country] option:checked")
             .value;
