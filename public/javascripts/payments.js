@@ -532,7 +532,8 @@
                             case "redirect":
                                 // Immediately redirect the customer.
                                 submitButton.textContent = "Redirecting…";
-                                window.location.replace(source.redirect.url);
+                                window.open(source.redirect.url, '_self');
+                                showProcessingScreen();
                                 break;
                             case "code_verification":
                                 // Display a code verification input to verify the source.

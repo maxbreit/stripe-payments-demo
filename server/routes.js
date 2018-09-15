@@ -72,6 +72,7 @@ router.post('/orders/:id/pay', async (req, res, next) => {
       }
     } else {
         try {
+            console.log('the source was not chargeable...')
             console.log(source);
             console.log(order);
         } catch (e) {
@@ -88,8 +89,10 @@ router.post('/orders/:id/pay', async (req, res, next) => {
 // Webhook handler to process payments for sources asynchronously.
 router.post('/webhook', async (req, res) => {
   let data;
+  console.log('webhook called');
   // Check if webhook signing is configured.
   if (config.stripe.webhookSecret) {
+    console.log('we configured a webhook secret so verify signature...')
     // Retrieve the event by verifying the signature using the raw body and secret.
     let event;
     let signature = req.headers['stripe-signature'];
@@ -111,7 +114,10 @@ router.post('/webhook', async (req, res) => {
     data = req.body.data;
   }
   const object = data.object;
-
+  if (object.object === 'source' || object.object === 'charge')
+  {
+      console.log('got this data from Stripe', data);
+  }
   // Monitor `source.chargeable` events.
   if (
     object.object === 'source' &&
@@ -130,6 +136,17 @@ router.post('/webhook', async (req, res) => {
     ) {
       return res.sendStatus(403);
     }
+    //  Option 2: pay the order directly using the chargeable source
+    try {
+        console.log('trying to pay order...');
+        await orders.pay(order.id, source.id);
+        console.log('order {} succesfully paid with source {}', order.id, source.id);
+    } catch (err) {
+        // This is where you handle declines and errors.
+        console.log('Error while paying order:', err);
+        console.log(source);
+        console.log(order);
+    }
 
     // Note: We're setting an idempotency key below on the charge creation to
     // prevent any race conditions. It's set to the order ID, which protects us from
@@ -140,35 +157,36 @@ router.post('/webhook', async (req, res) => {
     // https://stripe.com/docs/sources/best-practices#charge-creation
 
     // Pay the order using the source we just received.
-    let charge, status;
-    try {
-      charge = await stripe.charges.create(
-        {
-          source: source.id,
-          amount: order.amount,
-          currency: order.currency,
-          receipt_email: order.email,
-        },
-        {
-          // Set a unique idempotency key based on the order ID.
-          // This is to avoid any race conditions with your webhook handler.
-          idempotency_key: order.id,
-        }
-      );
-    } catch (err) {
-      // This is where you handle declines and errors.
-      // For the demo, we simply set the status to mark the order as failed.
-      status = 'failed';
-    }
-    if (charge && charge.status === 'succeeded') {
-      status = 'paid';
-    } else if (charge) {
-      status = charge.status;
-    } else {
-      status = 'failed';
-    }
-    // Update the order status based on the charge status.
-    await orders.update(order.id, {metadata: {status}});
+    //  Option 1: create a charge and update order
+    // let charge, status;
+    // try {
+    //   charge = await stripe.charges.create(
+    //     {
+    //       source: source.id,
+    //       amount: order.amount,
+    //       currency: order.currency,
+    //       receipt_email: order.email,
+    //     },
+    //     {
+    //       // Set a unique idempotency key based on the order ID.
+    //       // This is to avoid any race conditions with your webhook handler.
+    //       idempotency_key: order.id,
+    //     }
+    //   );
+    // } catch (err) {
+    //   // This is where you handle declines and errors.
+    //   // For the demo, we simply set the status to mark the order as failed.
+    //   status = 'failed';
+    // }
+    // if (charge && charge.status === 'succeeded') {
+    //   status = 'paid';
+    // } else if (charge) {
+    //   status = charge.status;
+    // } else {
+    //   status = 'failed';
+    // }
+    // // Update the order status based on the charge status.
+    // await orders.update(order.id, {metadata: {status}});
   }
 
   // Monitor `charge.succeeded` events.
