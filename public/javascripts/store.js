@@ -40,7 +40,7 @@ var Store = (function () {
 
         this.lineItems = [];
         this.products = {};
-        this.urlPrefix = 'https://doodance-stripe.herokuapp.com';
+        this.urlPrefix = 'https://doodance-server.herokuapp.com';
     }
 
     // Add the item with the specified name to the list of line items
@@ -152,7 +152,7 @@ var Store = (function () {
                 country
             ) {
                 try {
-                    var response = await fetch(this.urlPrefix + "/orders", {
+                    var response = await fetch(this.urlPrefix + "/orders/", {
                         method: "POST",
                         headers: {"Content-Type": "application/json"},
                         body: JSON.stringify({
